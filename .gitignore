@@ -26,12 +26,13 @@
 #######
 
 .ipynb_checkpoints
-.pyc
+*.pyc
 MANIFEST
 pub.sh
 setup.cfg
 setup.py
 upload.sh
+LICENSE
 
 #######
 # system
