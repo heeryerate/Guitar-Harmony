@@ -1,0 +1,1 @@
+Search.setIndex({docnames:["index"],envversion:52,filenames:["index.rst"],objects:{},objnames:{},objtypes:{},terms:{content:0,index:0,modul:0,page:0,search:0},titles:["Welcome to Guitar Harmony's documentation!"],titleterms:{document:0,guitar:0,harmoni:0,indic:0,tabl:0,welcom:0}})
