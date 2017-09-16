@@ -1,6 +1,6 @@
 ## A python wrapper to learn muisc thoery
 
-[**Read docs here**](guitar-harmony.rtfd.io)
+[**Read docs here**](http://guitar-harmony.readthedocs.io/en/latest/)
 
 ### Examples:
 ```python
