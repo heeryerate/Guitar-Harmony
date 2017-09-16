@@ -1,5 +1,7 @@
 ## A python wrapper to learn muisc thoery
 
+[**Read docs here**](guitar-harmony.rtfd.io)
+
 ### Examples:
 ```python
 $ python -i wapper.py
@@ -15,17 +17,17 @@ $ python -i wapper.py
 
 ### To do:
 > Transform note to pitch and/or frequency
-> 
+>
 > Generate random rhythm with a specific style
-> 
+>
 > Chordify melodic
-> 
+>
 > Generate according exercises
-> 
+>
 > Show('midi') and Show('scores')
-> 
+>
 > Integrate with `Aria Maestosa`
-> 
+>
 > Learn music by music (Neural networks)
 >
 > Music Visualization
@@ -47,10 +49,10 @@ This was made by Xi He [heeryerate@gmail.com](mailto:heeryerate@gmail.com).
 > [GitHub/musthe](https://github.com/gciruelos/musthe)
 >
 > [GitHub/midiutil](https://github.com/duggan/midiutil)
-> 
+>
 > [music21](http://web.mit.edu/music21/)
-> 
+>
 > [Aria Maestosa](http://ariamaestosa.sourceforge.net/index.html)
-> 
+>
 > [Other resources](https://wiki.python.org/moin/PythonInMusic)
 
