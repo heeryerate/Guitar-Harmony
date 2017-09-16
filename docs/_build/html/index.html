@@ -83,8 +83,15 @@
             
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to Guitar Harmony's documentation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">Welcome to Guitar Harmony's documentation!</a><ul>
+<li><a class="reference internal" href="#a-python-wrapper-to-learn-muisc-thoery">A python wrapper to learn muisc thoery</a></li>
+<li><a class="reference internal" href="#examples">Examples:</a></li>
+<li><a class="reference internal" href="#to-do">To do:</a></li>
+<li><a class="reference internal" href="#based-on-the-following-books">Based on the following books:</a></li>
+<li><a class="reference internal" href="#license">License:</a></li>
+<li><a class="reference internal" href="#reference">Reference:</a></li>
+</ul>
+</li>
 </ul>
 </div>
             
@@ -135,7 +142,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -149,68 +156,60 @@
            <div itemprop="articleBody">
             
   <div class="section" id="welcome-to-guitar-harmony-s-documentation">
-<h1>Welcome to Guitar Harmony's documentation!<a class="headerlink" href="#welcome-to-guitar-harmony-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
+<span id="welcome-to-guitar-harmony-s-documentation"></span><h1>Welcome to Guitar Harmony's documentation!<a class="headerlink" href="#welcome-to-guitar-harmony-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-python-wrapper-to-learn-muisc-thoery">
+<span id="a-python-wrapper-to-learn-muisc-thoery"></span><h2>A python wrapper to learn muisc thoery<a class="headerlink" href="#a-python-wrapper-to-learn-muisc-thoery" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="examples">
+<span id="examples"></span><h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ python -i wapper.py
+&gt;&gt;&gt; generate_interval<span class="o">(</span><span class="s1">&#39;Db&#39;</span>, <span class="s1">&#39;A5&#39;</span><span class="o">)</span>
+&gt;&gt;&gt; <span class="o">[</span><span class="s1">&#39;A&#39;</span><span class="o">]</span>
+&gt;&gt;&gt; generate_chord<span class="o">(</span><span class="s1">&#39;E&#39;</span>, <span class="s1">&#39;7&#39;</span><span class="o">)</span>
+&gt;&gt;&gt; <span class="o">[</span><span class="s1">&#39;E&#39;</span>, <span class="s1">&#39;G#&#39;</span>, <span class="s1">&#39;B&#39;</span>, <span class="s1">&#39;D&#39;</span><span class="o">]</span>
+&gt;&gt;&gt; generate_scale<span class="o">(</span><span class="s1">&#39;F#&#39;</span>, <span class="s1">&#39;mixolydian&#39;</span><span class="o">)</span>
+&gt;&gt;&gt; <span class="o">[</span><span class="s1">&#39;F#&#39;</span>, <span class="s1">&#39;G#&#39;</span>, <span class="s1">&#39;A#&#39;</span>, <span class="s1">&#39;B&#39;</span>, <span class="s1">&#39;C#&#39;</span>, <span class="s1">&#39;D#&#39;</span>, <span class="s1">&#39;E&#39;</span>, <span class="s1">&#39;F#&#39;</span><span class="o">]</span>
+&gt;&gt;&gt; generate_progression<span class="o">(</span><span class="s1">&#39;Ab&#39;</span>, <span class="s1">&#39;major_sevenths&#39;</span><span class="o">)</span>
+&gt;&gt;&gt; <span class="o">[</span><span class="s1">&#39;Abmaj7&#39;</span>, <span class="s1">&#39;Bbm7&#39;</span>, <span class="s1">&#39;Cm7&#39;</span>, <span class="s1">&#39;Dbmaj7&#39;</span>, <span class="s1">&#39;Eb7&#39;</span>, <span class="s1">&#39;Fm7&#39;</span>, <span class="s1">&#39;Gm7b5&#39;</span>, <span class="s1">&#39;Abmaj7&#39;</span><span class="o">]</span>
+</pre></div>
 </div>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="to-do">
+<span id="to-do"></span><h2>To do:<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+<li>Transform note to pitch and/or frequency</li>
+<li>Generate random rhythm with a specific style</li>
+<li>Chordify melodic</li>
+<li>Generate according exercises</li>
+<li>Show('midi') and Show('scores')</li>
+<li>Integrate with <code class="docutils literal"><span class="pre">Aria</span> <span class="pre">Maestosa</span></code></li>
+<li>Learn music by music (Neural networks)</li>
+<li>Music Visualization</li>
 </ul>
-<p>## A python wrapper to learn muisc thoery</p>
-<p>### Examples:
-<code class="docutils literal"><span class="pre">`python</span>
-<span class="pre">$</span> <span class="pre">python</span> <span class="pre">-i</span> <span class="pre">wapper.py</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">generate_interval('Db',</span> <span class="pre">'A5')</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">['A']</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">generate_chord('E',</span> <span class="pre">'7')</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">['E',</span> <span class="pre">'G#',</span> <span class="pre">'B',</span> <span class="pre">'D']</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">generate_scale('F#',</span> <span class="pre">'mixolydian')</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">['F#',</span> <span class="pre">'G#',</span> <span class="pre">'A#',</span> <span class="pre">'B',</span> <span class="pre">'C#',</span> <span class="pre">'D#',</span> <span class="pre">'E',</span> <span class="pre">'F#']</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">generate_progression('Ab',</span> <span class="pre">'major_sevenths')</span>
-<span class="pre">&gt;&gt;&gt;</span> <span class="pre">['Abmaj7',</span> <span class="pre">'Bbm7',</span> <span class="pre">'Cm7',</span> <span class="pre">'Dbmaj7',</span> <span class="pre">'Eb7',</span> <span class="pre">'Fm7',</span> <span class="pre">'Gm7b5',</span> <span class="pre">'Abmaj7']</span>
-<span class="pre">`</span></code></p>
-<p>### To do:
-&gt; Transform note to pitch and/or frequency
-&gt;
-&gt; Generate random rhythm with a specific style
-&gt;
-&gt; Chordify melodic
-&gt;
-&gt; Generate according exercises
-&gt;
-&gt; Show('midi') and Show('scores')
-&gt;
-&gt; Integrate with <cite>Aria Maestosa</cite>
-&gt;
-&gt; Learn music by music (Neural networks)
-&gt;
-&gt; Music Visualization
-&gt;</p>
-<p>### Based on the following books:
-&gt; [Harmony and Theory: A Comprehensive Source for All Musicians](<a class="reference external" href="https://www.amazon.com/Harmony-Theory-Comprehensive-Musicians-Essential/dp/0793579910">https://www.amazon.com/Harmony-Theory-Comprehensive-Musicians-Essential/dp/0793579910</a>)
-&gt;
-&gt; [Jazz Improvisation For Guitar - A Harmonic Approach](<a class="reference external" href="https://www.amazon.com/dp/0876391048/ref=pd_lpo_sbs_dp_ss_1?pf_rd_p=1944687662&amp;pf_rd_s=lpo-top-stripe-1&amp;pf_rd_t=201&amp;pf_rd_i=0634017721&amp;pf_rd_m=ATVPDKIKX0DER&amp;pf_rd_r=8ZX63RCG5PY74773KXAX">https://www.amazon.com/dp/0876391048/ref=pd_lpo_sbs_dp_ss_1?pf_rd_p=1944687662&amp;pf_rd_s=lpo-top-stripe-1&amp;pf_rd_t=201&amp;pf_rd_i=0634017721&amp;pf_rd_m=ATVPDKIKX0DER&amp;pf_rd_r=8ZX63RCG5PY74773KXAX</a>)
-&gt;
-&gt; [The Advancing Guitarist](<a class="reference external" href="https://www.amazon.com/Advancing-Guitarist-Mick-Goodrick/dp/0881885894">https://www.amazon.com/Advancing-Guitarist-Mick-Goodrick/dp/0881885894</a>)
-&gt;
-&gt; [Ear Training for the Contemporary Musician](<a class="reference external" href="https://www.amazon.com/Ear-Training-Contemporary-Musician-Elliott/dp/0793581931/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1472993043&amp;sr=1-1&amp;keywords=ear+training+for+the+contemporary+musician">https://www.amazon.com/Ear-Training-Contemporary-Musician-Elliott/dp/0793581931/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1472993043&amp;sr=1-1&amp;keywords=ear+training+for+the+contemporary+musician</a>)</p>
-<p>### License:
-This was made by Xi He [<a class="reference external" href="mailto:heeryerate&#37;&#52;&#48;gmail&#46;com">heeryerate<span>&#64;</span>gmail<span>&#46;</span>com</a>](<a class="reference external" href="mailto:heeryerate&#37;&#52;&#48;gmail&#46;com">mailto:heeryerate<span>&#64;</span>gmail<span>&#46;</span>com</a>).</p>
-<p>### Reference:
-&gt; [GitHub/musthe](<a class="reference external" href="https://github.com/gciruelos/musthe">https://github.com/gciruelos/musthe</a>)
-&gt;
-&gt; [GitHub/midiutil](<a class="reference external" href="https://github.com/duggan/midiutil">https://github.com/duggan/midiutil</a>)
-&gt;
-&gt; [music21](<a class="reference external" href="http://web.mit.edu/music21/">http://web.mit.edu/music21/</a>)
-&gt;
-&gt; [Aria Maestosa](<a class="reference external" href="http://ariamaestosa.sourceforge.net/index.html">http://ariamaestosa.sourceforge.net/index.html</a>)
-&gt;
-&gt; [Other resources](<a class="reference external" href="https://wiki.python.org/moin/PythonInMusic">https://wiki.python.org/moin/PythonInMusic</a>)</p>
+</div>
+<div class="section" id="based-on-the-following-books">
+<span id="based-on-the-following-books"></span><h2>Based on the following books:<a class="headerlink" href="#based-on-the-following-books" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://www.amazon.com/Harmony-Theory-Comprehensive-Musicians-Essential/dp/0793579910">Harmony and Theory: A Comprehensive Source for All Musicians</a></li>
+<li><a class="reference external" href="https://www.amazon.com/dp/0876391048/ref=pd_lpo_sbs_dp_ss_1?pf_rd_p=1944687662&amp;pf_rd_s=lpo-top-stripe-1&amp;pf_rd_t=201&amp;pf_rd_i=0634017721&amp;pf_rd_m=ATVPDKIKX0DER&amp;pf_rd_r=8ZX63RCG5PY74773KXAX">Jazz Improvisation For Guitar - A Harmonic Approach</a></li>
+<li><a class="reference external" href="https://www.amazon.com/Advancing-Guitarist-Mick-Goodrick/dp/0881885894">The Advancing Guitarist</a></li>
+<li><a class="reference external" href="https://www.amazon.com/Ear-Training-Contemporary-Musician-Elliott/dp/0793581931/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1472993043&amp;sr=1-1&amp;keywords=ear+training+for+the+contemporary+musician">Ear Training for the Contemporary Musician</a></li>
+</ul>
+</div>
+<div class="section" id="license">
+<span id="license"></span><h2>License:<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This was made by Xi He <a class="reference external" href="mailto:heeryerate&#37;&#52;&#48;gmail&#46;com">heeryerate<span>&#64;</span>gmail<span>&#46;</span>com</a>.</p>
+</div>
+<div class="section" id="reference">
+<span id="reference"></span><h2>Reference:<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/gciruelos/musthe">GitHub/musthe</a></li>
+<li><a class="reference external" href="https://github.com/duggan/midiutil">GitHub/midiutil</a></li>
+<li><a class="reference external" href="http://web.mit.edu/music21/">music21</a></li>
+<li><a class="reference external" href="http://ariamaestosa.sourceforge.net/index.html">Aria Maestosa</a></li>
+<li><a class="reference external" href="https://wiki.python.org/moin/PythonInMusic">Other resources</a></li>
+</ul>
+</div>
 </div>
 
 
