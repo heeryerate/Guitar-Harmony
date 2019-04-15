@@ -26,18 +26,19 @@ modes = ['minor', 'major']
 
 if __name__ == '__main__':
 
-    print(generate_interval('Db', 'A5'))
-    print(generate_chord('E', '7'))
-    print(generate_scale('F#', 'mixolydian'))
-    print(generate_progression('Ab', 'major_sevenths'))
+    # print(generate_interval('Db', 'A5'))
+    # print(generate_chord('E', '7'))
+    # print(generate_scale('F#', 'mixolydian'))
+    # print(generate_progression('Ab', 'major_sevenths'))
 
-    # random.seed(123)
+    random.seed(123)
 
-    # exs_1 = [generate_progression(i, y) for i, y in product(flat_circle_roots, Progression().all_progressions())]
-    # random.shuffle(exs_1)
-    # for item in exs_1:
-    #     print(item)
-        # raw_input("Press Enter to continue...")
+    exs_1 = [generate_progression(i, y) for i, y in product(flat_circle_roots, Progression().all_progressions())]
+    exs_1 = [(i, y) for i, y in product(flat_circle_roots, Progression().all_progressions())]
+    random.shuffle(exs_1)
+    for item in exs_1:
+        print(item)
+        input("Press Enter to continue...")
 
 
 
