@@ -1,6 +1,10 @@
 
 import unittest
-from musthe import *
+from basics.Note import Note
+from basics.Scale import Scale
+from basics.Interval import Interval
+from basics.Chord import Chord
+from basics.Progression import Progression
 
 
 class TestsForJesus(unittest.TestCase):
@@ -15,7 +19,7 @@ class TestsForJesus(unittest.TestCase):
         self.assertRaises(Exception, Note, 'E####')
 
     def test_interval_parsing(self):
-        self.assertEqual(Interval('d5').semitones, 6)
+        self.assertEqual(Interval('d5').semitone, 6)
         self.assertRaises(Exception, Interval, 'P3')
 
     def test_note_sum(self):
@@ -25,25 +29,25 @@ class TestsForJesus(unittest.TestCase):
         self.assertEqual(str(Note('F')+Interval('P5')), str(Note('C')))
 
     def test_note_scales(self):
-        self.assertEqual(list(map(str, scale(Note('C'), 'major'))),          ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'natural_minor'))),  ['C', 'D', 'Eb','F', 'G', 'Ab','Bb','C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'harmonic_minor'))), ['C', 'D', 'Eb','F', 'G', 'Ab','B', 'C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'melodic_minor'))),  ['C', 'D', 'Eb','F', 'G', 'A', 'B', 'C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'dorian'))),         ['C', 'D', 'Eb','F', 'G', 'A', 'Bb','C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'locrian'))),        ['C', 'Db','Eb','F', 'Gb','Ab','Bb','C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'lydian'))),         ['C', 'D', 'E', 'F#','G', 'A', 'B', 'C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'mixolydian'))),     ['C', 'D', 'E', 'F', 'G', 'A', 'Bb','C'])
-        self.assertEqual(list(map(str, scale(Note('C'), 'phrygian'))),       ['C', 'Db','Eb','F', 'G', 'Ab','Bb','C'])
-        self.assertEqual(list(map(str, scale(Note('C'),'major_pentatonic'))),['C', 'D', 'E', 'G', 'A', 'C'])
-        self.assertEqual(list(map(str, scale(Note('C'),'minor_pentatonic'))),['C', 'Eb','F', 'G', 'Bb','C'])
-        self.assertRaises(Exception, scale, Note('C'), 'non-existent scale')
+        self.assertEqual(list(map(str, Scale('C', 'major').notes)),          ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C'])
+        self.assertEqual(list(map(str, Scale('C', 'natural_minor').notes)),  ['C', 'D', 'Eb','F', 'G', 'Ab','Bb','C'])
+        self.assertEqual(list(map(str, Scale('C', 'harmonic_minor').notes)), ['C', 'D', 'Eb','F', 'G', 'Ab','B', 'C'])
+        self.assertEqual(list(map(str, Scale('C', 'melodic_minor').notes)),  ['C', 'D', 'Eb','F', 'G', 'A', 'B', 'C'])
+        self.assertEqual(list(map(str, Scale('C', 'dorian').notes)),         ['C', 'D', 'Eb','F', 'G', 'A', 'Bb','C'])
+        self.assertEqual(list(map(str, Scale('C', 'locrian').notes)),        ['C', 'Db','Eb','F', 'Gb','Ab','Bb','C'])
+        self.assertEqual(list(map(str, Scale('C', 'lydian').notes)),         ['C', 'D', 'E', 'F#','G', 'A', 'B', 'C'])
+        self.assertEqual(list(map(str, Scale('C', 'mixolydian').notes)),     ['C', 'D', 'E', 'F', 'G', 'A', 'Bb','C'])
+        self.assertEqual(list(map(str, Scale('C', 'phrygian').notes)),       ['C', 'Db','Eb','F', 'G', 'Ab','Bb','C'])
+        self.assertEqual(list(map(str, Scale('C','major_pentatonic').notes)),['C', 'D', 'E', 'G', 'A', 'C'])
+        self.assertEqual(list(map(str, Scale('C','minor_pentatonic').notes)),['C', 'Eb','F', 'G', 'Bb','C'])
+        self.assertRaises(Exception, Scale, 'C', 'non-existent scale')
 
 class TestsForJesusChords(unittest.TestCase):
     def setUp(self):
         '''put here for later building of test chords, one for each
         chord_type in chord_recipes'''
-        self.chord_types = [k for k in Chord(Note('Bb')).chord_recipes.keys()]
-        self.chords = {k:Chord(Note('A'), k) for k in self.chord_types}
+        self.chord_types = [k for k in Chord('Bb').chord_recipes.keys()]
+        self.chords = {k:Chord('A', k) for k in self.chord_types}
         self.rootNote = Note('A')
 
     def tearDown(self):
@@ -53,12 +57,13 @@ class TestsForJesusChords(unittest.TestCase):
 
     def test_chord_creation(self):
         #check __str__ returns
-        self.assertEqual(str(Chord(Note('A'))), 'AM')
-        self.assertEqual(str(Chord(Note('B'), 'm')), 'Bm')
-        self.assertEqual(str(Chord(Note('C'), 'dim')), 'Cdim')
-        self.assertEqual(str(Chord(Note('D'), 'aug')), 'Daug')
-        self.assertEqual(str(Chord(Note('A#'))), 'A#M')
-        self.assertEqual(str(Chord(Note('Bb'))), 'BbM')
+        self.assertEqual(list(map(str, Chord('A').notes)), ['A', 'C#', 'E'])
+        self.assertEqual(list(map(str, Chord('B','dim').notes)), ['B', 'D', 'F'])
+        self.assertEqual(list(map(str, Chord('C','aug').notes)), ['C', 'E', 'G#'])
+        self.assertEqual(list(map(str, Chord('D','maj7').notes)), ['D', 'F#', 'A', 'C#'])
+        self.assertEqual(list(map(str, Chord('A#','sus4').notes)), ['A#', 'D#', 'E#'])
+        self.assertEqual(list(map(str, Chord('Ab','m').notes)), ['Ab', 'Cb', 'Eb'])
+        self.assertEqual(list(map(str, Chord('G','add2').notes)), ['G', 'A', 'B', 'D'])
 
         #check __repr__ returns
         #//todo
@@ -71,7 +76,7 @@ class TestsForJesusChords(unittest.TestCase):
         self.assertRaises(Exception, Chord, 'H')
 
         #check recipe notes
-        self.assertEqual(self.chords['M'].notes,
+        self.assertEqual(self.chords[''].notes,
                          [self.rootNote,
                           self.rootNote+Interval('M3'),
                           self.rootNote+Interval('P5')

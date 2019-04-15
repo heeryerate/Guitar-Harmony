@@ -17,7 +17,10 @@ class Chord():
                      '7': ['R', 'M3', 'P5', 'm7'],
                      'aug7': ['R', 'M3', 'A5', 'm7'],
                      'sus2': ['R', 'P5', 'P8', 'M2'],
-                     'sus4': ['R', 'P5', 'P8', 'P4']}
+                     'sus4': ['R', 'P4', 'P5'],
+                     'add2': ['R', 'M2', 'M3', 'P5'],
+                     'madd2': ['R', 'M2', 'm3', 'P5'],
+                     }
 
     def __init__(self, root='C', chord_type=''):
         self.notes = []
@@ -30,7 +33,7 @@ class Chord():
         if chord_type in self.chord_recipes.keys():
             self.chord_type = chord_type
         else:
-            raise Exception('Invalid chord type supplied! current valid types: {} '.format(self.chord_recipes.keys()))
+            raise Exception('Invalid chord type {} supplied! current valid types: {} '.format(chord_type, self.chord_recipes.keys()))
 
         self.build_chord()
 

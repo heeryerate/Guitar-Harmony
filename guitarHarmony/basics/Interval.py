@@ -19,6 +19,6 @@ class Interval():
         except:
             raise Exception('Could not parse the interval.')
         self.number = int(interval[1])
-
     def all_intervals(self):
         return self.semitones.keys()
+
