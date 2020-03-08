@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2017-09-17 09:13:29
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-07 20:14:17
+# @Last Modified time: 2020-03-08 13:16:05
 
 __all__ = [
 			'note',
@@ -13,4 +13,4 @@ __all__ = [
 			'style',
 			'exercise'
 	]
-from guitarHarmony import *
+from guitarHarmony import note
