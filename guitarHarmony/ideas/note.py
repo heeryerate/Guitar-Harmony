@@ -1,5 +1,5 @@
 import re
-from .Interval import Interval
+from .interval import Interval
 
 class Note():
     """

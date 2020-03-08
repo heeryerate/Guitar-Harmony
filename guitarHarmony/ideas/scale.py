@@ -1,5 +1,5 @@
-from .Interval import Interval
-from .Note import Note
+from .interval import Interval
+from .note import Note
 
 class Scale():
     """

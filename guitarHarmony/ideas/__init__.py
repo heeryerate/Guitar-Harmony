@@ -16,8 +16,9 @@
 
 ############
 
-from .Note import Note
-from .Scale import Scale
-from .Interval import Interval
-from .Chord import Chord
-from .Progression import Progression
+from .note import Note
+from .scale import Scale
+from .interval import Interval
+from .chord import Chord
+from .progression import Progression
+from .exercise import Exercise

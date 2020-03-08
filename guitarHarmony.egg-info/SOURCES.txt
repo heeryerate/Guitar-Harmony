@@ -1,0 +1,16 @@
+README
+setup.cfg
+setup.py
+guitarHarmony/__init__.py
+guitarHarmony.egg-info/PKG-INFO
+guitarHarmony.egg-info/SOURCES.txt
+guitarHarmony.egg-info/dependency_links.txt
+guitarHarmony.egg-info/top_level.txt
+guitarHarmony/ideas/__init__.py
+guitarHarmony/ideas/chord.py
+guitarHarmony/ideas/exercise.py
+guitarHarmony/ideas/interval.py
+guitarHarmony/ideas/note.py
+guitarHarmony/ideas/progression.py
+guitarHarmony/ideas/scale.py
+guitarHarmony/ideas/style.py

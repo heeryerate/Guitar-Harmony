@@ -1,7 +1,7 @@
-from .Interval import Interval
-from .Note import Note
-from .Chord import Chord
-from .Scale import Scale
+from .interval import Interval
+from .note import Note
+from .chord import Chord
+from .scale import Scale
 
 class Progression():
     """
