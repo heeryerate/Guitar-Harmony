@@ -47,6 +47,8 @@ LICENSE
 README
 docs/_build/
 dist/
+build/
+guitarHarmony.egg-info
 
 
 
