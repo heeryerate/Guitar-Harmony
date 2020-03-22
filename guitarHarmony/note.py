@@ -1,5 +1,8 @@
+from __future__ import absolute_import
+
 import re
 import music21 as m2
+
 from .helper import reverseDict
 
 class Note(object):
@@ -19,42 +22,40 @@ class Note(object):
     step_to_tone = {0:'C', 1:'C#,Db', 2:'D', 3:'D#,Eb', 4:'E', 5:'F', 
                     6:'F#,Gb',7:'G',8:'G#,Ab',9:'A',10:'A#,Bb', 11:'B'}
 
-    def __init__(self, note=None):
-        self.__note = m2.note.Note(pitchName = note if note is None else note.replace('b', '-'), keywords={})
+    def __init__(self, note='C'):
+        self.m2note = m2.note.Note(pitchName = self._check(note), keywords={})
         self._updateAttrs()
 
+    def _check(self, note):
+        assert isinstance(note, str), 'note has to be a string'
+        if note == '': note = 'C4'
+        if not note[-1].isdigit(): note += '4'
+        assert bool(re.match("[A-G](#{0,4}|(b|-){0,4})[1-9]", note)), 'Note invalid! example: Ab, A-, A--3, G3, B##4'
+        return note.replace('-', 'b')
+
     def _updateAttrs(self):
-        self.name = self.__note.name
-        self.pitch = self.__note.pitch
-        self.octave = self.__note.octave if self.__note.octave is not None else 4
-        self.duration = self.__note.duration
-        self.nameWithOctave = self.__note.nameWithOctave
-        self.lyric = self.__note.lyric
-        self.tone = self.__note.step
+        self.name = self.m2note.name.replace('-','b')
+        self.pitch = self.m2note.pitch
+        self.octave = self.m2note.octave if self.m2note.octave is not None else 4
+        self.duration = self.m2note.duration
+        self.nameWithOctave = self.m2note.nameWithOctave
+        self.lyric = self.m2note.lyric
+        self.tone = self.m2note.step
 
     def show(self, show_type = ''):
-        if show_type == 'midi':
-            s = m2.stream.Stream()
-            s.append(m2.note.Rest())
-            s.append(self.__note)
-            s.show('midi')
-        elif show_type == 'text':
-            self.__note.show('text')
-        elif show_type == 'notation':
-            self._addNotation()
-            self.__note.show()
-            self._removeNotation()
-        elif show_type == '':
-            self.__note.show()
-        else:
-            raise NotImplementedError()
+        from .stream import Stream
+        stream = Stream([self])
+        stream.show(show_type)
+
+    def instanceCheck(self):
+        return 'Note'
 
     def transpose(self, step=0):
-        return Note(self.__note.transpose(step).nameWithOctave)
+        return Note(self.m2note.transpose(step).nameWithOctave)
 
     def semiSteps(self):
         octave_steps = 12 * (self.octave - 4)
-        tone_steps = self.tone_to_step[self.__note.step]
+        tone_steps = self.tone_to_step[self.m2note.step]
         alter_steps = int(self.pitch.accidental.alter) if self.pitch.accidental is not None else 0
         return octave_steps + tone_steps + alter_steps
 
@@ -73,20 +74,14 @@ class Note(object):
 
         return Note(pitchName)
 
-    def _removeNotation(self):
-        self.__note.lyric = ''
-        self._updateAttrs()
-
-    def _addNotation(self):
-        self._removeNotation()
-        self.__note.insertLyric(self.name)
-        self._updateAttrs()
+    def changeOctave(self, diff=0):
+        return Note(self.name + str(self.octave+diff))
 
     def __repr__(self):
-        return f"Note({self.nameWithOctave})"
+        return f"Note({(self.nameWithOctave if self.octave!=4 else self.name).replace('-','b')})"
 
     def __str__(self):
-        return self.nameWithOctave
+        return (self.nameWithOctave if self.octave!=4 else self.name).replace('-','b')
 
     def __eq__(self, other):
         return self.nameWithOctave == other.nameWithOctave
