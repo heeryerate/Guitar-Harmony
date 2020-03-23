@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-21 18:11:20
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-21 23:01:19
+# @Last Modified time: 2020-03-22 14:02:21
 
 import music21 as m2
 from .note import Note
@@ -20,7 +20,11 @@ class Stream(object):
         for el in elements:
             if hasattr(el, "instanceCheck"):
                 if el.instanceCheck() == 'Note':
-                    m2elements.append(el.m2note)
+                    # el.m2note.quarterLength = 0.75
+                    # m2elements.append(el.m2note)
+                    m2note = m2.note.Note(el.nameWithOctave)
+                    m2note.quarterLength = 0.75
+                    m2elements.append(m2note)
                 if el.instanceCheck() == 'Chord':
                     chord = m2.chord.Chord([note.nameWithOctave for note in el.notes])
                     m2elements.append(chord)
@@ -28,6 +32,7 @@ class Stream(object):
                 if isinstance(el, m2.chord.Chord):
                     m2elements.append(el)
                 if isinstance(el, m2.note.Note):
+                    el.duration = 1/16
                     m2elements.append(el)
         return m2elements
 
@@ -49,7 +54,6 @@ class Stream(object):
                     if el.instanceCheck() == 'Chord':
                         print(f"{el.root.name}{el.chord_type} on bass {el.bass.name}")
         elif show_type == 'notation':
-            print(self.elements)
             for idx, el in enumerate(self.elements):
                 self.stream[idx].lyric = el.__str__()
             self.stream.show()

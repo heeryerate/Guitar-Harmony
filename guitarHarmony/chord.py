@@ -70,7 +70,7 @@ class Chord():
 
     @staticmethod
     def displayAllChords():
-        return list(Chord.chord_recipes.keys())
+        return Chord.chord_recipes
 
     def getInversion(self, order=1):
         assert 0<=order <= len(self.chord_recipe)-1, f"Chord inversion failed."
