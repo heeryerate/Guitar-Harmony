@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-22 15:00:52
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-22 22:13:53
+# @Last Modified time: 2020-03-28 17:46:50
 import unittest
 from guitarHarmony.note import Note
 import music21 as m2
@@ -24,6 +24,10 @@ class TestNote(unittest.TestCase):
         self.assertRaises(ValueError, Note, 'CCb')
         self.assertRaises(ValueError, Note, 'C#####')
         self.assertRaises(ValueError, Note, 'A3#')
+
+        self.assertRaises(ValueError, Note, 'A', 0.)
+        self.assertRaises(ValueError, Note, 'C', '2.0')
+
 
     def test_noteAttrs(self):
         self.assertEqual(self.C.name, 'C')
@@ -110,6 +114,10 @@ class TestNote(unittest.TestCase):
     def test_m2note(self):
         self.assertEqual(self.C.m2note().nameWithOctave, m2.note.Note('C4').nameWithOctave)
         self.assertEqual(self.C.m2note().quarterLength, m2.note.Note('C4').quarterLength)
+
+    def test_sortNotes(self):
+        notes = [self.C, self.A, self.Fflat, self.Gsharp2, self.Ebb5, self.Cbb]
+        self.assertEqual(Note.sortNotes(notes), ['G#2', 'Cbb', 'C', 'Fb', 'A', 'Ebb5'])
 
 if __name__ == '__main__':
     unittest.main()

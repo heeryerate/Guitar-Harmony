@@ -15,6 +15,9 @@ class Note(object):
         self.octave = int(self.nameWithOctave[-1])
         self.tone = self.nameWithOctave[0]
         self.accidental = self.nameWithOctave[1:-1]
+
+        if not (isinstance(duration, float) and duration > 0.):
+            raise ValueError('duration invalid!')
         self.duration = duration
 
     def _check(self, note):
@@ -47,8 +50,8 @@ class Note(object):
 
     def getSemiSteps(self):
         octave_steps = 12 * (self.octave - 4)
-        tone_steps = CONSTANT.tone_to_semisteps[self.tone]
-        alter_steps = CONSTANT.accidental_to_step[list(set(self.accidental))[0]] * len(self.accidental) if self.accidental else 0
+        tone_steps = CONSTANT.tone_to_semisteps()[self.tone]
+        alter_steps = CONSTANT.accidental_to_step()[list(set(self.accidental))[0]] * len(self.accidental) if self.accidental else 0
         return octave_steps + tone_steps + alter_steps
 
     def simplify(self, accidental_type='#'):
@@ -65,7 +68,7 @@ class Note(object):
     @staticmethod
     def applySemiSteps(semi_steps=0, accidental_type='#'):
         octave, residual = semi_steps // 12, semi_steps % 12
-        names = CONSTANT.semisteps_to_tone[residual]
+        names = CONSTANT.semisteps_to_tone()[residual]
         if len(names) == 1:
             return Note(names[0] + str(octave+4))
         else:
@@ -75,6 +78,10 @@ class Note(object):
 
     def changeOctave(self, diff=0):
         return Note(self.name + str(self.octave+diff))
+
+    @staticmethod
+    def sortNotes(notes, reverse=False):
+        return sorted(notes, key=lambda x:x.getSemiSteps(), reverse=reverse)
 
     def __repr__(self):
         return f"Note({(self.nameWithOctave if self.octave!=4 else self.name)})"

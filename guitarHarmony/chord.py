@@ -2,75 +2,83 @@ from __future__ import absolute_import
 
 import copy
 import music21 as m2
+import collections
 
 from .note import Note
 from .interval import Interval
-from .helper import suf, reverseDict
+from .helper import suf, reverseDict, CONSTANT
 
 class Chord():
     """
     The chord class.
     """
-    chord_recipes = {''         : ['P1', 'M3', 'P5'],
-                     'm'        : ['P1', 'm3', 'P5'],
-                     'dim'      : ['P1', 'm3', 'd5'],
-                     'aug'      : ['P1', 'M3', 'A5'],
-
-                     '7'        : ['P1', 'M3', 'P5', 'm7'],
-                     'm7'       : ['P1', 'm3', 'P5', 'm7'],
-                     'maj7'     : ['P1', 'M3', 'P5', 'M7'],
-                     'dim7'     : ['P1', 'm3', 'd5', 'd7'],
-                     'm7b5'     : ['P1', 'm3', 'd5', 'd7'],
-                     'mmaj7'    : ['P1', 'm3', 'P5', 'M7'],
-                     'aug7'     : ['P1', 'M3', 'A5', 'm7'],
-                     'aug-maj7' : ['P1', 'M3', 'A5', 'M7'],
-                     '7b5'      : ['P1', 'M3', 'd5', 'm7'],
-                     '7#5'      : ['P1', 'M3', 'A5', 'm7'],
-
-                     'sus2'     : ['P1', 'M2', 'P5'],
-                     'sus4'     : ['P1', 'P4', 'P5'],
-                     }
-
-    alter_recipes = {
-                     'power5'   : ['P1', 'P5'],
-                     'add2'     : ['M9'],
-                     }
-
-    tone_to_order = {'C':1, 'D':2, 'E':3, 'F':4, 'G':5, 'A':6, 'B':7}
-    order_to_tone = reverseDict(tone_to_order)
-
-    def __init__(self, root='C', chord_type=None, inversion=0, notes_recipe=[]):
+    def __init__(self, root='C', chord_type='', chord_recipe=[], chord_notes=[], inversion=0):
         if isinstance(root, str): root=Note(root)
-        self.bass = root
-        self.root = root
-        self.inversion = inversion
-        self.notes = []
+        self.root, self.chord_type, self.chord_recipe, self.chord_notes =  self._check(root, chord_type, chord_recipe, chord_notes)
 
-        if chord_type in self.chord_recipes.keys():
-            self.chord_type = chord_type
-            self.chord_recipe = self.chord_recipes[chord_type]
-        elif chord_type is None and len(notes_recipe) >= 2:
-            self.chord_type = 'user'
-            self.chord_recipe = ['P1'] + [Interval.getIntervals(base=notes_recipe[0], target=note) for note in notes_recipe[1:]]
-        else:
-            raise Exception(f'Invalid chord type {chord_type}! Current valid types at Chord.displayAllChords()')
-
-        self.buildChord(self.chord_recipe)
-
-        if self.inversion:
-            assert 0<=inversion<= len(self.chord_recipe)-1, f"Chord inversion failed."
-            self.bass = self.notes[inversion]
-            self.notes = self.notes[inversion:] + [note.changeOctave(1) if note.semiSteps() < self.notes[-1].semiSteps() else note for note in self.notes[:inversion]]
+        if inversion:
+            if not (isinstance(inversion, int) and 0 <= inversion <= len(self.chord_recipe)-1):
+                raise ValueError(f"Chord inversion failed.")
+            self.bass = self.chord_notes[inversion]
+            self.chord_notes = self.chord_notes[inversion:] + [note.changeOctave(1) if note.getSemiSteps() < self.chord_notes[-1].getSemiSteps() else note for note in self.chord_notes[:inversion]]
             self.chord_recipe = self.chord_recipe[inversion:] + self.chord_recipe[:inversion]
+        else:
+            self.bass = copy.deepcopy(self.root)
 
-        self.buildArpeggio(self.notes)
+        self.inversion = inversion
 
-    def buildChord(self, chord_recipe):
-        self.notes = [Interval.applyInterval(self.root, interval) for interval in chord_recipe]
+    def _check(self, root, chord_type, chord_recipe, chord_notes):
+        if chord_type not in CONSTANT.chord_recipes().keys():
+            raise ValueError(f'Invalid chord type {chord_type}! Current valid types at Chord.displayAllChords()')
+
+        if chord_type != 'user':
+            chord_recipe_ref = CONSTANT.chord_recipes()[chord_type]
+            chord_notes_ref= self.buildChord(root, chord_recipe_ref)
+            if chord_notes != [] and chord_notes != chord_notes_ref:
+                raise ValueError(f'{chord_type} do not match chord_notes {chord_notes}')
+            if chord_recipe != [] and chord_recipe_ref != chord_recipe:
+                raise ValueError(f'{chord_type} do not match chord_recipe {chord_recipe}')
+            chord_recipe, chord_notes = chord_recipe_ref, chord_notes_ref
+        else:
+            if chord_recipe == [] and chord_notes == []:
+                raise ValueError(f'user chord type not specified!')
+            elif chord_recipe == [] and len(chord_notes) >= 2:
+                chord_recipe = self.buildRecipe(chord_notes)
+            elif chord_notes == [] and len(chord_recipe) >= 2:
+                chord_notes = self.buildChord(root, chord_recipe)
+            elif len(chord_notes) >= 2 and len(chord_recipe) >= 2:
+                chord_notes_ref = self.buildChord(root, chord_recipe)
+                if chord_notes_ref != chord_notes:
+                    raise ValueError(f'{chord_recipe} and {chord_notes} do not match')
+            else:
+                raise ValueError(f'{chord_recipe} and {chord_notes} do not match or can not construct chord')
+        
+        if root != chord_notes[0]:
+            raise ValueError(f'root {root} and chord_notes {chord_notes} not match.')
+
+        chord_recipe = [Interval(interval) if isinstance(interval, str) else interval for interval in chord_recipe]
+        chord_notes = [Note(note) if isinstance(note, str) else note for note in chord_notes]
+
+        if Note.sortNotes(chord_notes) != chord_notes:
+            raise ValueError(f'chord notes {chord_notes} is not sorted.')
+
+        return root, chord_type, chord_recipe, chord_notes
+
+    @staticmethod
+    def buildChord(root, chord_recipe):
+        return [Interval.applyInterval(root, interval) for interval in chord_recipe]
+
+    def buildRecipe(self, chord_notes):
+        return [Interval('P1')] + [Interval.getInterval(base=chord_notes[0], target=note) for note in chord_notes[1:]]
 
     @staticmethod
     def displayAllChords():
-        return Chord.chord_recipes
+        return CONSTANT.chord_recipes()
+
+    def m2chord(self):
+        # TODO: need test
+        chord = m2.chord.Chord(self.chord_notes)
+        return chord
 
     def getInversion(self, order=1):
         assert 0<=order <= len(self.chord_recipe)-1, f"Chord inversion failed."
@@ -84,14 +92,14 @@ class Chord():
     def instanceCheck(self):
         return 'Chord'
 
-    def buildArpeggio(self, notes):
-        self.arpeggio = self.notes
+    def buildArpeggio(self, chord_notes):
+        self.arpeggio = self.chord_notes
 
     def __repr__(self):
         return f"Chord(Root({self.root.name}), {self.chord_type}, Bass({self.bass.name}))"
 
     def __str__(self):
-        if len(self.notes) == 2:
+        if len(self.chord_notes) == 2:
             return f"Inv.{self.chord_recipe[-1]}"
 
         if self.inversion:
@@ -100,7 +108,7 @@ class Chord():
             return f"{self.root.name}{self.chord_type}"
 
     def __eq__(self, other):
-        if len(self.notes) != len(other.notes):
+        if len(self.chord_notes) != len(other.chord_notes):
             return False
         else:
-            return all(self.notes[i] == other.notes[i] for i in range(len(self.notes)))
+            return all(self.chord_notes[i] == other.chord_notes[i] for i in range(len(self.chord_notes)))
