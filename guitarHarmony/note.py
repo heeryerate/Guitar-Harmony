@@ -120,3 +120,7 @@ class Note(object):
     def __eq__(self, other):
         if isinstance(other, str): other=Note(other)
         return self.nameWithOctave == other.nameWithOctave
+
+    def __gt__(self, other):
+        if isinstance(other, str): other=Note(other)
+        return self.nameWithOctave >= other.nameWithOctave
