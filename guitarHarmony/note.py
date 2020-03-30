@@ -10,15 +10,25 @@ class Note(object):
     __all__ = ['show', 'transpose', 'type', 'm2note', 'getSemiSteps', 'applyInterval', 'changeOctave', 'simplify']
 
     def __init__(self, note='C', duration=1.):
-        self.nameWithOctave = self._check(note)
-        self.name = self.nameWithOctave[:-1]
-        self.octave = int(self.nameWithOctave[-1])
-        self.tone = self.nameWithOctave[0]
-        self.accidental = self.nameWithOctave[1:-1]
+        if note == 'R':
+            self._rest()
+        else:
+            self.nameWithOctave = self._check(note)
+            self.name = self.nameWithOctave[:-1]
+            self.octave = int(self.nameWithOctave[-1])
+            self.tone = self.nameWithOctave[0]
+            self.accidental = self.nameWithOctave[1:-1]
 
         if not (isinstance(duration, float) and duration > 0.):
             raise ValueError('duration invalid!')
         self.duration = duration
+
+    def _rest(self):
+        self.nameWithOctave = 'Rest'
+        self.name = 'R'
+        self.octave = None
+        self.tone = None 
+        self.accidental = None
 
     def _check(self, note):
         if not isinstance(note, str):   raise ValueError('Note has to be a string')
@@ -44,11 +54,16 @@ class Note(object):
         return self.applySemiSteps(semi_steps+steps, accidental_type)
 
     def m2note(self):
-        note = m2.note.Note(self.nameWithOctave.replace('b','-'))
+        if self.nameWithOctave == 'Rest':
+            note = m2.note.Rest()
+        else:
+            note = m2.note.Note(self.nameWithOctave.replace('b','-'))
         note.quarterLength = self.duration
         return note
 
     def getSemiSteps(self):
+        if self.nameWithOctave == 'Rest':
+            raise ValueError("Rest note does not have semi-steps")
         octave_steps = 12 * (self.octave - 4)
         tone_steps = CONSTANT.tone_to_semisteps()[self.tone]
         alter_steps = CONSTANT.accidental_to_step()[list(set(self.accidental))[0]] * len(self.accidental) if self.accidental else 0
@@ -63,6 +78,8 @@ class Note(object):
     def applyInterval(self, interval='P1'):
         from .interval import Interval
         if isinstance(interval, str): interval=Interval(interval)
+        if self.nameWithOctave == 'Rest':
+            raise ValueError("Rest note does not have semi-steps")
         return Interval.applyInterval(self, interval)
 
     @staticmethod
@@ -84,10 +101,16 @@ class Note(object):
         return sorted(notes, key=lambda x:x.getSemiSteps(), reverse=reverse)
 
     def __repr__(self):
-        return f"Note({(self.nameWithOctave if self.octave!=4 else self.name)})"
+        if self.nameWithOctave == 'Rest':
+            return f"Note(Rest)"
+        else:
+            return f"Note({(self.nameWithOctave if self.octave!=4 else self.name)})"
 
     def __str__(self):
-        return self.nameWithOctave if self.octave!=4 else self.name
+        if self.nameWithOctave == 'Rest':
+            return 'Rest'
+        else:
+            return self.nameWithOctave if self.octave!=4 else self.name
 
     def __eq__(self, other):
         if isinstance(other, str): other=Note(other)

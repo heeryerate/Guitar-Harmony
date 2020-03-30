@@ -95,7 +95,10 @@ class Chord():
 
     def buildArpeggio(self):
         #TODO: need refine
-        return self.chord_notes
+        notes = copy.deepcopy(self.chord_notes)
+        for note in notes:
+            note.duration = 0.25
+        return notes+notes[::-1]+notes+notes[::-1]
 
     def __repr__(self):
         return f"Chord(Root({self.root.name}), {self.chord_type}, Bass({self.bass.name}))"

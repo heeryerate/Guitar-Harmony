@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-22 15:00:52
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-28 17:46:50
+# @Last Modified time: 2020-03-29 23:52:39
 import unittest
 from guitarHarmony.note import Note
 import music21 as m2
@@ -13,8 +13,9 @@ class TestNote(unittest.TestCase):
         self.A = Note('A')
         self.Fflat = Note('Fb')
         self.Gsharp2 = Note('G#2')
-        self.Ebb5 = Note('Ebb5')
+        self.Ebb5 = Note('Ebb5', 2.)
         self.Cbb = Note('Cbb')
+        self.R = Note('R')
 
     def test_noteInit(self):
         self.assertRaises(ValueError, Note, 'Af')
@@ -59,6 +60,7 @@ class TestNote(unittest.TestCase):
         self.assertEqual(self.Ebb5.tone, 'E')
         self.assertEqual(self.Ebb5.accidental, 'bb')
         self.assertEqual(self.Ebb5.octave, 5)
+        self.assertEqual(self.Ebb5.duration, 2.)
 
         self.assertEqual(self.Cbb.name, 'Cbb')
         self.assertEqual(self.Cbb.nameWithOctave, 'Cbb4')
@@ -66,12 +68,20 @@ class TestNote(unittest.TestCase):
         self.assertEqual(self.Cbb.accidental, 'bb')
         self.assertEqual(self.Cbb.octave, 4)
 
+        self.assertEqual(self.R.name, 'R')
+        self.assertEqual(self.R.nameWithOctave, 'Rest')
+        self.assertEqual(self.R.tone, None)
+        self.assertEqual(self.R.accidental, None)
+        self.assertEqual(self.R.octave, None)
+
     def test_getSemiSteps(self):
         self.assertEqual(self.C.getSemiSteps(), 0)
         self.assertEqual(self.A.getSemiSteps(), 9)
         self.assertEqual(self.Fflat.getSemiSteps(), 4)
         self.assertEqual(self.Gsharp2.getSemiSteps(), -16)
         self.assertEqual(self.Ebb5.getSemiSteps(), 14)
+
+        self.assertRaises(ValueError, self.R.getSemiSteps)
 
     def test_simplifyNote(self):
         self.assertEqual(self.C.simplify(), Note())
@@ -84,6 +94,8 @@ class TestNote(unittest.TestCase):
         self.assertEqual(self.Gsharp2.simplify('b'), Note('Ab2'))
         self.assertEqual(self.Ebb5.simplify('b'), Note('D5')) 
         self.assertEqual(self.Cbb.simplify('b'), Note('Bb3'))
+
+        self.assertRaises(ValueError, self.R.simplify)
 
     def test_applySemiSteps(self):
         self.assertEqual(Note.applySemiSteps(0), Note())
@@ -102,6 +114,8 @@ class TestNote(unittest.TestCase):
         self.assertEqual(self.Gsharp2.applyInterval('A2'), 'A##2')
         self.assertEqual(self.Ebb5.applyInterval('P8'), Note('Ebb6'))
 
+        self.assertRaises(ValueError, self.R.applyInterval, 'P1')
+
     def test_noteType(self):
         self.assertEqual(self.C.type(), 'Note')
 
@@ -111,9 +125,18 @@ class TestNote(unittest.TestCase):
         self.assertEqual(self.C.transpose(4, 'b'), Note('E'))
         self.assertEqual(self.C.transpose(-4, 'b'), Note('Ab3'))
 
+        self.assertRaises(ValueError, self.R.transpose)
+
     def test_m2note(self):
         self.assertEqual(self.C.m2note().nameWithOctave, m2.note.Note('C4').nameWithOctave)
-        self.assertEqual(self.C.m2note().quarterLength, m2.note.Note('C4').quarterLength)
+        self.assertEqual(self.C.m2note().quarterLength, m2.note.Note('C4').quarterLength)        
+
+        self.assertEqual(self.Ebb5.m2note().nameWithOctave, m2.note.Note('E--5').nameWithOctave)
+        note = m2.note.Note('E--5')
+        note.quarterLength=2.
+        self.assertEqual(self.Ebb5.m2note().quarterLength, note.quarterLength)        
+
+        self.assertEqual(self.R.m2note().quarterLength, 1.)
 
     def test_sortNotes(self):
         notes = [self.C, self.A, self.Fflat, self.Gsharp2, self.Ebb5, self.Cbb]

@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2017-09-17 09:13:29
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-21 23:01:55
+# @Last Modified time: 2020-03-29 23:02:20
 
 __all__ = [
 			'note',
@@ -19,4 +19,4 @@ from guitarHarmony.interval import Interval
 from guitarHarmony.chord import Chord
 from guitarHarmony.stream import Stream
 
-__version__='0.5.4'
+__version__='0.5.5'
