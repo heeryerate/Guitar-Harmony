@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-21 18:11:20
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-29 22:12:31
+# @Last Modified time: 2020-03-30 00:01:21
 
 import music21 as m2
 from .note import Note
@@ -20,14 +20,10 @@ class Stream(object):
         for el in elements:
             if hasattr(el, "type"):
                 if el.type() == 'Note':
-                    # el.m2note.quarterLength = 0.75
-                    # m2elements.append(el.m2note)
-                    m2note = m2.note.Note(el.nameWithOctave)
-                    m2note.quarterLength = el.duration
+                    m2note = el.m2()
                     m2elements.append(m2note)
                 if el.type() == 'Chord':
-                    chord = m2.chord.Chord([note.nameWithOctave.replace('b', '-') for note in el.chord_notes])
-                    m2elements.append(chord)
+                    m2elements.append(el.m2())
             else:
                 if isinstance(el, m2.chord.Chord):
                     m2elements.append(el)

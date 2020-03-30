@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-22 15:00:52
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-29 23:52:39
+# @Last Modified time: 2020-03-30 00:00:45
 import unittest
 from guitarHarmony.note import Note
 import music21 as m2
@@ -128,15 +128,15 @@ class TestNote(unittest.TestCase):
         self.assertRaises(ValueError, self.R.transpose)
 
     def test_m2note(self):
-        self.assertEqual(self.C.m2note().nameWithOctave, m2.note.Note('C4').nameWithOctave)
-        self.assertEqual(self.C.m2note().quarterLength, m2.note.Note('C4').quarterLength)        
+        self.assertEqual(self.C.m2().nameWithOctave, m2.note.Note('C4').nameWithOctave)
+        self.assertEqual(self.C.m2().quarterLength, m2.note.Note('C4').quarterLength)        
 
-        self.assertEqual(self.Ebb5.m2note().nameWithOctave, m2.note.Note('E--5').nameWithOctave)
+        self.assertEqual(self.Ebb5.m2().nameWithOctave, m2.note.Note('E--5').nameWithOctave)
         note = m2.note.Note('E--5')
         note.quarterLength=2.
-        self.assertEqual(self.Ebb5.m2note().quarterLength, note.quarterLength)        
+        self.assertEqual(self.Ebb5.m2().quarterLength, note.quarterLength)        
 
-        self.assertEqual(self.R.m2note().quarterLength, 1.)
+        self.assertEqual(self.R.m2().quarterLength, 1.)
 
     def test_sortNotes(self):
         notes = [self.C, self.A, self.Fflat, self.Gsharp2, self.Ebb5, self.Cbb]

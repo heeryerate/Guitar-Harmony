@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-08 17:16:33
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-28 17:24:37
+# @Last Modified time: 2020-03-30 00:38:24
 
 def reverseDict(dic):
     inv_map = dict()
@@ -81,6 +81,8 @@ class CONSTANT(object):
                 'aug-maj7' : ['P1', 'M3', 'A5', 'M7'],
                 '7b5'      : ['P1', 'M3', 'd5', 'm7'],
                 '7#5'      : ['P1', 'M3', 'A5', 'm7'],
+
+                'm9'       : ['P1', 'm3', 'P5', 'm7', 'M9'],
 
                 'sus2'     : ['P1', 'M2', 'P5'],
                 'sus4'     : ['P1', 'P4', 'P5'],

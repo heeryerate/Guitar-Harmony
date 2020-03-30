@@ -28,6 +28,15 @@ class Chord():
         self.inversion = inversion
         self.arpeggio = self.buildArpeggio()
 
+    @staticmethod
+    def pharseChord(text='C.m', inversion=0):
+        print(text)
+        if '.' in text:
+            bass, chord_type = text.split('.')
+            return Chord(root=bass, chord_type=chord_type, inversion=inversion)
+        else:
+            return Chord(root=text, inversion=inversion)
+
     def _check(self, root, chord_type, chord_recipe, chord_notes):
         if chord_type not in CONSTANT.chord_recipes().keys():
             raise ValueError(f'Invalid chord type {chord_type}! Current valid types at Chord.displayAllChords()')
@@ -76,9 +85,8 @@ class Chord():
     def displayAllChordsRecipe():
         return list(CONSTANT.chord_recipes().keys())
 
-    def m2chord(self):
-        # TODO: need test
-        chord = m2.chord.Chord(self.chord_notes)
+    def m2(self):
+        chord = m2.chord.Chord([note.nameWithOctave.replace('b', '-') for note in self.chord_notes])
         return chord
 
     def getInversion(self, order=1):

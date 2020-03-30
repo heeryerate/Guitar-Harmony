@@ -41,6 +41,9 @@ class Note(object):
             raise ValueError('Note invalid! example: Ab, Abb3, G5, B###')
         return note
 
+    def setDuration(self, duration=1.):
+        return Note(self.nameWithOctave, duration)
+
     def show(self, kind = ''):
         from .stream import Stream
         stream = Stream([self])
@@ -53,7 +56,7 @@ class Note(object):
         semi_steps = self.getSemiSteps()
         return self.applySemiSteps(semi_steps+steps, accidental_type)
 
-    def m2note(self):
+    def m2(self):
         if self.nameWithOctave == 'Rest':
             note = m2.note.Rest()
         else:
@@ -108,7 +111,7 @@ class Note(object):
 
     def __str__(self):
         if self.nameWithOctave == 'Rest':
-            return 'Rest'
+            return 'R'
         else:
             return self.nameWithOctave if self.octave!=4 else self.name
 
