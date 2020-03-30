@@ -97,7 +97,7 @@ class Chord():
 
     def getInversion(self, order=1):
         assert 0<=order <= len(self.chord_recipe)-1, f"Chord inversion failed."
-        return Chord(self.root, self.chord_type, inversion=order)
+        return Chord(self.root, self.chord_type, inversion=order, duration=self.duration)
 
     def show(self, show_type = ''):
         from .stream import Stream
