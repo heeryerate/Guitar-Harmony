@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-21 18:11:20
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-30 00:01:21
+# @Last Modified time: 2020-03-30 01:19:31
 
 import music21 as m2
 from .note import Note
@@ -19,15 +19,10 @@ class Stream(object):
         m2elements = []
         for el in elements:
             if hasattr(el, "type"):
-                if el.type() == 'Note':
-                    m2note = el.m2()
-                    m2elements.append(m2note)
-                if el.type() == 'Chord':
+                if el.type() == 'Note' or el.type() == 'Chord':
                     m2elements.append(el.m2())
             else:
-                if isinstance(el, m2.chord.Chord):
-                    m2elements.append(el)
-                if isinstance(el, m2.note.Note):
+                if isinstance(el, m2.chord.Chord) or isinstance(el, m2.note.Note):
                     m2elements.append(el)
         return m2elements
 

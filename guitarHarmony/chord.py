@@ -12,7 +12,7 @@ class Chord():
     """
     The chord class.
     """
-    def __init__(self, root='C', chord_type='', chord_recipe=[], chord_notes=[], inversion=0):
+    def __init__(self, root='C', chord_type='', chord_recipe=[], chord_notes=[], inversion=0, duration=1.):
         if isinstance(root, str): root=Note(root)
         self.root, self.chord_type, self.chord_recipe, self.chord_notes =  self._check(root, chord_type, chord_recipe, chord_notes)
 
@@ -27,15 +27,20 @@ class Chord():
 
         self.inversion = inversion
         self.arpeggio = self.buildArpeggio()
+        self.duration = duration
+
+    def setBass(self, note):
+        # TODO: need adjustment
+        self.bass = Note(note)
 
     @staticmethod
-    def pharseChord(text='C.m', inversion=0):
+    def pharseChord(text='C.m', inversion=0, duration=1.):
         print(text)
         if '.' in text:
             bass, chord_type = text.split('.')
-            return Chord(root=bass, chord_type=chord_type, inversion=inversion)
+            return Chord(root=bass, chord_type=chord_type, inversion=inversion, duration=duration)
         else:
-            return Chord(root=text, inversion=inversion)
+            return Chord(root=text, inversion=inversion, duration=duration)
 
     def _check(self, root, chord_type, chord_recipe, chord_notes):
         if chord_type not in CONSTANT.chord_recipes().keys():
@@ -87,6 +92,7 @@ class Chord():
 
     def m2(self):
         chord = m2.chord.Chord([note.nameWithOctave.replace('b', '-') for note in self.chord_notes])
+        chord.quarterLength = self.duration
         return chord
 
     def getInversion(self, order=1):

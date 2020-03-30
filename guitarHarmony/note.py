@@ -76,7 +76,9 @@ class Note(object):
         if not accidental_type in 'b#':
             raise ValueError(f'{accidental_type} invalid!')
         semi_steps = self.getSemiSteps()
-        return Note.applySemiSteps(semi_steps, accidental_type)
+        note = Note.applySemiSteps(semi_steps, accidental_type)
+        note.setDuration(self.duration)
+        return note
 
     def applyInterval(self, interval='P1'):
         from .interval import Interval
@@ -97,7 +99,7 @@ class Note(object):
                     return Note(name + str(octave+4))
 
     def changeOctave(self, diff=0):
-        return Note(self.name + str(self.octave+diff))
+        return Note(self.name + str(self.octave+diff), duration=self.duration)
 
     @staticmethod
     def sortNotes(notes, reverse=False):
