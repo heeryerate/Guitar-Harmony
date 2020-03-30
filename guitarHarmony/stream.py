@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-21 18:11:20
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-22 14:02:21
+# @Last Modified time: 2020-03-29 22:12:31
 
 import music21 as m2
 from .note import Note
@@ -18,21 +18,20 @@ class Stream(object):
     def convertToM2Elements(self, elements):
         m2elements = []
         for el in elements:
-            if hasattr(el, "instanceCheck"):
-                if el.instanceCheck() == 'Note':
+            if hasattr(el, "type"):
+                if el.type() == 'Note':
                     # el.m2note.quarterLength = 0.75
                     # m2elements.append(el.m2note)
                     m2note = m2.note.Note(el.nameWithOctave)
-                    m2note.quarterLength = 0.75
+                    m2note.quarterLength = el.duration
                     m2elements.append(m2note)
-                if el.instanceCheck() == 'Chord':
-                    chord = m2.chord.Chord([note.nameWithOctave for note in el.notes])
+                if el.type() == 'Chord':
+                    chord = m2.chord.Chord([note.nameWithOctave.replace('b', '-') for note in el.chord_notes])
                     m2elements.append(chord)
             else:
                 if isinstance(el, m2.chord.Chord):
                     m2elements.append(el)
                 if isinstance(el, m2.note.Note):
-                    el.duration = 1/16
                     m2elements.append(el)
         return m2elements
 
@@ -48,10 +47,10 @@ class Stream(object):
             stream.show('midi')
         elif show_type == 'text':
             for el in self.elements:
-                if hasattr(el, "instanceCheck"):
-                    if el.instanceCheck() == 'Note':
+                if hasattr(el, "type"):
+                    if el.type() == 'Note':
                         print(el.__repr__())
-                    if el.instanceCheck() == 'Chord':
+                    if el.type() == 'Chord':
                         print(f"{el.root.name}{el.chord_type} on bass {el.bass.name}")
         elif show_type == 'notation':
             for idx, el in enumerate(self.elements):

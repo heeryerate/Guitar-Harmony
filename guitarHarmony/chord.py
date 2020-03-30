@@ -26,6 +26,7 @@ class Chord():
             self.bass = copy.deepcopy(self.root)
 
         self.inversion = inversion
+        self.arpeggio = self.buildArpeggio()
 
     def _check(self, root, chord_type, chord_recipe, chord_notes):
         if chord_type not in CONSTANT.chord_recipes().keys():
@@ -72,8 +73,8 @@ class Chord():
         return [Interval('P1')] + [Interval.getInterval(base=chord_notes[0], target=note) for note in chord_notes[1:]]
 
     @staticmethod
-    def displayAllChords():
-        return CONSTANT.chord_recipes()
+    def displayAllChordsRecipe():
+        return list(CONSTANT.chord_recipes().keys())
 
     def m2chord(self):
         # TODO: need test
@@ -89,11 +90,12 @@ class Chord():
         stream = Stream([self])
         stream.show(show_type)
 
-    def instanceCheck(self):
+    def type(self):
         return 'Chord'
 
-    def buildArpeggio(self, chord_notes):
-        self.arpeggio = self.chord_notes
+    def buildArpeggio(self):
+        #TODO: need refine
+        return self.chord_notes
 
     def __repr__(self):
         return f"Chord(Root({self.root.name}), {self.chord_type}, Bass({self.bass.name}))"

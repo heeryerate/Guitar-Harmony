@@ -7,7 +7,7 @@ from .helper import reverseDict, CONSTANT
 from collections import Counter
 
 class Note(object):
-    __all__ = ['show', 'transpose', 'semiSteps', 'simplify']
+    __all__ = ['show', 'transpose', 'type', 'm2note', 'getSemiSteps', 'applyInterval', 'changeOctave', 'simplify']
 
     def __init__(self, note='C', duration=1.):
         self.nameWithOctave = self._check(note)

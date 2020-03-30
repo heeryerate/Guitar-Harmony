@@ -73,7 +73,8 @@ class Interval(object):
         from .chord import Chord
         from .stream import Stream 
 
-        chord = Chord(root=base, chord_type=None, notes_recipe=[base, Interval.applyInterval(base, self.interval)])
+        chord = Chord(root=base, chord_type='user', chord_notes=[base, Interval.applyInterval(base, self.interval)])
+        print(chord)
         s = Stream([chord])
         if show_type == 'text':
             print(f"{self} on base {Note(base)}")
