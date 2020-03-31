@@ -123,4 +123,4 @@ class Note(object):
 
     def __gt__(self, other):
         if isinstance(other, str): other=Note(other)
-        return self.nameWithOctave >= other.nameWithOctave
+        return self.getSemiSteps() >= other.getSemiSteps()
