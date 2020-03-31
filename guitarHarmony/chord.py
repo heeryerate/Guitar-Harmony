@@ -3,16 +3,18 @@ from __future__ import absolute_import
 import copy
 import music21 as m2
 import collections
+import random
+import math
 
 from .note import Note
 from .interval import Interval
-from .helper import suf, reverseDict, CONSTANT
+from .helper import suf, reverseDict, CONSTANT, flatten, warning, cyclelist
 
 class Chord():
     """
     The chord class.
     """
-    def __init__(self, root='C', chord_type='', chord_recipe=[], chord_notes=[], inversion=0, duration=1.):
+    def __init__(self, root='C', chord_type='', chord_recipe=[], chord_notes=[], inversion=0, duration=1., bass=''):
         if isinstance(root, str): root=Note(root)
         self.root, self.chord_type, self.chord_recipe, self.chord_notes =  self._check(root, chord_type, chord_recipe, chord_notes)
 
@@ -21,21 +23,32 @@ class Chord():
                 raise ValueError(f"Chord inversion failed.")
             self.bass = self.chord_notes[inversion]
             self.chord_notes = self.chord_notes[inversion:] + [note.changeOctave(1) if note.getSemiSteps() < self.chord_notes[-1].getSemiSteps() else note for note in self.chord_notes[:inversion]]
-            self.chord_recipe = self.chord_recipe[inversion:] + self.chord_recipe[:inversion]
+            self.chord_recipe = Chord.buildRecipe(self.chord_notes)
         else:
             self.bass = copy.deepcopy(self.root)
+
+        if bass != '' and self.bass != bass:
+            self.setBass(bass)
 
         self.inversion = inversion
         self.arpeggio = self.buildArpeggio()
         self.duration = duration
 
     def setBass(self, note):
-        # TODO: need adjustment
-        self.bass = Note(note)
+        bass = Note(note)
+        if self.bass > self.root:
+            raise ValueError(f"bass note {self.bass} is above chord root")
+
+        if bass.name in [note.name for note in self.chord_notes]:
+            chord_notes = [bass] + [note for note in self.chord_notes if note.name != bass.name]
+        else:
+            chord_notes = [bass] + self.chord_notes
+
+        self.bass = bass
+        self.chord_notes = chord_notes
 
     @staticmethod
     def pharseChord(text='C.m', inversion=0, duration=1.):
-        print(text)
         if '.' in text:
             bass, chord_type = text.split('.')
             return Chord(root=bass, chord_type=chord_type, inversion=inversion, duration=duration)
@@ -83,7 +96,8 @@ class Chord():
     def buildChord(root, chord_recipe):
         return [Interval.applyInterval(root, interval) for interval in chord_recipe]
 
-    def buildRecipe(self, chord_notes):
+    @staticmethod
+    def buildRecipe(chord_notes):
         return [Interval('P1')] + [Interval.getInterval(base=chord_notes[0], target=note) for note in chord_notes[1:]]
 
     @staticmethod
@@ -107,12 +121,65 @@ class Chord():
     def type(self):
         return 'Chord'
 
-    def buildArpeggio(self):
-        #TODO: need refine
-        notes = copy.deepcopy(self.chord_notes)
-        for note in notes:
-            note.duration = 0.25
-        return notes+notes[::-1]+notes+notes[::-1]
+    def buildArpeggio(self, length=4., unit=1/4, kind='up'):
+        # TODO: need more refine. Hard to define a proper Arpeggio
+        if unit not in CONSTANT.arpeggio_note_units():
+            raise ValueError(f"unit {unit} invalid, should be in {CONSTANT.arpeggio_note_units()} ")
+
+        if kind not in CONSTANT.argeggio_kinds():
+            raise ValueError(f"kind {kind} invalid, should be in {CONSTANT.argeggio_kinds()}")
+
+        if int(length % unit):
+            raise ValueError(f"length not valid. Set to be even times of 1/16 or 1/6")
+
+        notes_count = int(length / unit)
+        arpeggio_group = [note.setDuration(unit) for note in self.chord_notes]
+
+        groups_count = math.ceil(notes_count / len(self.chord_notes))
+
+        if kind == 'up':
+            return (arpeggio_group * groups_count)[:notes_count]
+        if kind == 'Up':
+            return flatten([Note.changeNotesOctave(arpeggio_group, 1) if i%2 else arpeggio_group for i in range(groups_count)])[:notes_count]
+
+        if kind == 'down':
+            return (arpeggio_group[::-1] * groups_count)[:notes_count]
+        if kind == 'Down':
+            return flatten([Note.changeNotesOctave(arpeggio_group[::-1], -1) if i%2 else arpeggio_group[::-1] for i in range(groups_count)])[:notes_count]
+
+        if kind == 'hill':
+            return flatten([arpeggio_group[::-1] if i%2 else arpeggio_group for i in range(groups_count)])[:notes_count]
+        # if kind == 'Hill': ## TODO: need refine
+            # return flatten([Note.changeNotesOctave(arpeggio_group[::-1], -1) if i%2 else Note.changeNotesOctave(arpeggio_group, -1) for i in range(groups_count)])[:notes_count]
+
+        if kind == 'valley':
+            return flatten([arpeggio_group if i%2 else arpeggio_group[::-1]] for i in range(groups_count))[:notes_count]
+        # if kind == 'Valley': ## TODO: need refine
+            # return flatten([Note.changeNotesOctave(arpeggio_group[::-1], -1) if i%2 else arpeggio_group[::-1] for i in range(groups_count)])[:notes_count]
+
+    @staticmethod
+    def matchChord(obj, verbose=False):
+        if not isinstance(obj, list) and obj.type() == 'Chord':
+            notes = obj.chord_notes
+        else:
+            notes = obj
+        sorted_notes = Note.sortNotes(notes)
+        notes_recipe = Chord.buildRecipe(sorted_notes)
+        for k, v in CONSTANT.chord_recipes().items():
+            if notes_recipe in cyclelist(v): # TODO: clear wrong, need refine
+                if verbose:
+                    return Chord(sorted_notes[0], k)
+                else:
+                    return k
+        else:
+            warning('No match found!')
+            return 
+
+    def expandChord(self):
+        pass
+
+    def closeChord(self):
+        pass
 
     def __repr__(self):
         return f"Chord(Root({self.root.name}), {self.chord_type}, Bass({self.bass.name}))"

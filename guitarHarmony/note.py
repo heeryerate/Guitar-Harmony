@@ -103,7 +103,12 @@ class Note(object):
 
     @staticmethod
     def sortNotes(notes, reverse=False):
+        notes = [Note(note) if isinstance(note, str) else note for note in notes]
         return sorted(notes, key=lambda x:x.getSemiSteps(), reverse=reverse)
+
+    @staticmethod
+    def changeNotesOctave(notes=['C'], diff=0):
+        return [Note(note).changeOctave(diff) if isinstance(note, str) else note.changeOctave(diff) for note in notes]
 
     def __repr__(self):
         if self.nameWithOctave == 'Rest':
@@ -123,4 +128,4 @@ class Note(object):
 
     def __gt__(self, other):
         if isinstance(other, str): other=Note(other)
-        return self.nameWithOctave >= other.nameWithOctave
+        return self.getSemiSteps() >= other.getSemiSteps()

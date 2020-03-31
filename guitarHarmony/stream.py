@@ -2,22 +2,23 @@
 # @Author: Xi He
 # @Date:   2020-03-21 18:11:20
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-30 01:19:31
+# @Last Modified time: 2020-03-30 20:32:07
 
 import music21 as m2
 from .note import Note
 from .chord import Chord
+from .helper import flatten
 
 class Stream(object):
     def __init__(self, elements=[]):
         assert len(elements) > 0, 'Empty elements!'
         self.elements = elements
         self.m2elements = self.convertToM2Elements(self.elements)
-        self.stream = self.buildStream(self.m2elements)
+        self.stream = self._buildStream()
 
     def convertToM2Elements(self, elements):
         m2elements = []
-        for el in elements:
+        for el in flatten(elements):
             if hasattr(el, "type"):
                 if el.type() == 'Note' or el.type() == 'Chord':
                     m2elements.append(el.m2())
@@ -26,10 +27,14 @@ class Stream(object):
                     m2elements.append(el)
         return m2elements
 
-    def buildStream(self, m2elements):
+    @staticmethod
+    def buildStream(m2elements):
         stream = m2.stream.Stream()
         [stream.append(el) for el in m2elements]
         return stream
+
+    def _buildStream(self):
+        return Stream.buildStream(self.m2elements)
 
     def show(self, show_type=''):
         if show_type == 'midi': 

@@ -2,7 +2,8 @@
 # @Author: Xi He
 # @Date:   2020-03-08 17:16:33
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-30 18:09:46
+# @Last Modified time: 2020-03-30 21:16:42
+import collections
 
 def reverseDict(dic):
     inv_map = dict()
@@ -97,6 +98,14 @@ class CONSTANT(object):
                 'add2'     : ['M9'],
                      }
 
+    @staticmethod
+    def arpeggio_note_units():
+        return [1/8, 1/4, 1/3, 1/6]
+
+    @staticmethod
+    def argeggio_kinds():
+        return ['down', 'Down', 'up', 'Up', 'valley', 'hill', 'Valley', 'Hill']
+
 
 def warning(message, style='WARNING'):
     CRED = '\033[91m'
@@ -106,5 +115,15 @@ def warning(message, style='WARNING'):
 def suf(n):
     return "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
 
-def eqList(lst1, lst2):
-    return lst1 == lst2
+def flatten(x):
+    if isinstance(x, collections.Iterable):
+        return [a for i in x for a in flatten(i)]
+    else:
+        return [x]
+
+def cyclelist(x):
+    if not isinstance(x, list):
+        raise ValueError(f"{x} invalid!")
+    if len(x) <= 1:
+        return x
+    return [x[i:]+x[:i] for i in range(len(x))]

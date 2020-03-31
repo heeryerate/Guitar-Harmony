@@ -84,6 +84,12 @@ class Interval(object):
     def type(self):
         return 'Interval'
 
+    @staticmethod
+    def cycleIntervals(lst):
+        # TODO: e.g. transfer [P1, M3, P5] to [M3, P5, P8] to [P1, m3, m6]
+        pass
+
+
     def __repr__(self):
         pitch_suffix = suf(int(self.interval[1:]))
         return f"Interval({CONSTANT.interval_name_mapping()[self.interval_type]},{pitch_suffix})"
