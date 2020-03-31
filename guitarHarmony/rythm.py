@@ -19,7 +19,7 @@ class Rythm(object):
     def _decide_duration(self):
         ''' decide duration according to self.beats'''
         #TODO
-        return 1.0/8
+        return 1.0
     
     def applyNotes(self, sorted_note_list):
         '''
@@ -44,13 +44,13 @@ class Rythm(object):
         self.outStream = gt.Stream(out)
         
     def __call__(self, note_list):
-        sorted_note_list = sorted(note_list)
-        # sorted_note_list = note_list
+#         sorted_note_list = sorted(note_list)
+        sorted_note_list = note_list
         self.applyNotes(sorted_note_list)
         return self.outStream.show('midi')
     
     
     
 # Test: 
-# ss = Rythm(test='BxSBBxSx')
+# ss = Rythm(test='BxSxBBSxBxSBxBSxBxSxxBSxBxxBxxBS')
 # ss(['A2', 'E3', 'A3', 'C4', 'D4', 'G4'])
