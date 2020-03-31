@@ -19,5 +19,6 @@ from guitarHarmony.note import Note
 from guitarHarmony.interval import Interval
 from guitarHarmony.chord import Chord
 from guitarHarmony.stream import Stream
+from guitarHarmony.rythm import Rythm
 
 __version__='0.5.9'
