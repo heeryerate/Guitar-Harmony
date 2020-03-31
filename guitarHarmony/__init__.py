@@ -12,7 +12,8 @@ __all__ = [
 			'progression',
 			'style',
 			'exercise',
-			'stream'
+			'stream',
+			'rythm'
 	]
 from guitarHarmony.note import Note
 from guitarHarmony.interval import Interval
