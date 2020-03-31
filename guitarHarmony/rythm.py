@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 from collections import Counter
+import numpy as np
 
 class Rythm(object):
     def __init__(self, *args, **kwargs):
@@ -32,9 +33,11 @@ class Rythm(object):
         beat2chord['B'] = gt.Chord(B1[0], 'user', chord_notes=B1)
         beat2chord['S'] = gt.Chord(S1[0], 'user', chord_notes=S1)
         
+        xset = sorted_note_list[1:-1] + ['R']
+
         out = []
         for i in sorted(self.beats2):
-            a = beat2chord.get(self.beats2.get(i)) or gt.Note('R',self.dur)
+            a = beat2chord.get(self.beats2.get(i)) or gt.Note(np.random.choice(xset),self.dur)
             out.append(a)
         
         self.out = out
