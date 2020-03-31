@@ -13,18 +13,17 @@ To
 
 # Examples
 - [Jupyter-notebook Demo](https://github.com/heeryerate/Guitar-Harmony/blob/master/examples/develop_test.ipynb)
-
-## Note
-## Interval
-## Chord
-## Scale
-## Stream
-## Rhythm
-## Track
-## Progression
-## Style
-## Composer
-## Transcriber
+- [Note]()
+- [Interval]()
+- [Chord]()
+- [Scale]()
+- [Stream]()
+- [Rhythm]()
+- [Track]()
+- [Progression]()
+- [Style]()
+- [Composer]()
+- [Transcriber]()
 
 # To Do
 - Generate random rhythm with a specific style

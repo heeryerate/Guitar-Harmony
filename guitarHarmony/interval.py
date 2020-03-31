@@ -28,8 +28,8 @@ class Interval(object):
             return 
         octave_diff = target.octave - base.octave
         if octave_diff >= 2:
-            warning(f"{target} is two octave from {base}")
-            return 
+            # warning(f"{target} is two octave from {base}")
+            return Interval.getInterval(target, base.changeOctave(octave_diff))
         pitch_steps = CONSTANT.tone_to_steps()[target.tone]-CONSTANT.tone_to_steps()[base.tone]+octave_diff*7+1
 
         if len(CONSTANT.semisteps_to_interval()[semi_diff]) == 1:

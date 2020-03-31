@@ -176,7 +176,9 @@ class Chord():
             return 
 
     def expandChord(self):
-        pass
+        bass = self.root.changeOctave(-1)
+        notes = [bass] + [bass.applyInterval('P5')] + self.chord_notes + [self.root.changeOctave(1)]
+        return Chord(bass, chord_type='user', chord_notes = notes, duration=self.duration)
 
     def closeChord(self):
         pass
