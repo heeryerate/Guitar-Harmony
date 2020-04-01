@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-08 17:16:33
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-30 21:16:42
+# @Last Modified time: 2020-04-01 15:11:20
 import collections
 
 def reverseDict(dic):
@@ -90,6 +90,26 @@ class CONSTANT(object):
                 'sus4'     : ['P1', 'P4', 'P5'],
 
                 'user'     : []
+                }
+
+    @staticmethod
+    def scale_recipes():
+        return {'major' :           ['P1', 'M2', 'M3', 'P4', 'P5', 'M6', 'M7', 'P8'],
+                'natural_minor':    ['P1', 'M2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
+                'harmonic_minor':   ['P1', 'M2', 'm3', 'P4', 'P5', 'm6', 'M7', 'P8'],
+                'melodic_minor':    ['P1', 'M2', 'm3', 'P4', 'P5', 'M6', 'M7', 'P8'],
+                'dorian':           ['P1', 'M2', 'm3', 'P4', 'P5', 'M6', 'm7', 'P8'],
+                'locrian':          ['P1', 'm2', 'm3', 'P4', 'd5', 'm6', 'm7', 'P8'],
+                'lydian':           ['P1', 'M2', 'M3', 'A4', 'P5', 'M6', 'M7', 'P8'],
+                'mixolydian':       ['P1', 'M2', 'M3', 'P4', 'P5', 'M6', 'm7', 'P8'],
+                'phrygian':         ['P1', 'm2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
+                'major_pentatonic': ['P1', 'M2', 'M3', 'P5', 'M6', 'P8'],
+                'minor_pentatonic': ['P1', 'm3', 'P4', 'P5', 'm7', 'P8'],
+                'alter':            ['P1', 'm2', 'm3', 'P4', 'd5', 'm6', 'm7', 'P8'],
+                'blues':            ['P1', 'm3', 'P4', 'd5', 'P5', 'm7', 'P8'],
+                'lydian_dominant':  ['P1', 'M2', 'M3', 'A4', 'P5', 'M6', 'm7', 'P8'],
+
+                'user':             []
                 }
 
     @staticmethod

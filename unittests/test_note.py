@@ -2,7 +2,7 @@
 # @Author: Xi He
 # @Date:   2020-03-22 15:00:52
 # @Last Modified by:   Xi He
-# @Last Modified time: 2020-03-30 00:00:45
+# @Last Modified time: 2020-04-01 15:01:40
 import unittest
 from guitarHarmony.note import Note
 import music21 as m2
@@ -117,7 +117,7 @@ class TestNote(unittest.TestCase):
         self.assertRaises(ValueError, self.R.applyInterval, 'P1')
 
     def test_noteType(self):
-        self.assertEqual(self.C.type(), 'Note')
+        self.assertEqual(isinstance(self.C, Note), True)
 
     def test_transpose(self):
         self.assertEqual(self.C.transpose(4), Note('E'))

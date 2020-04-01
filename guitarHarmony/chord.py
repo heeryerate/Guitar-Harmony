@@ -98,7 +98,7 @@ class Chord():
 
     @staticmethod
     def buildRecipe(chord_notes):
-        return [Interval('P1')] + [Interval.getInterval(base=chord_notes[0], target=note) for note in chord_notes[1:]]
+        return [Interval.getInterval(base=chord_notes[0], target=note) for note in chord_notes]
 
     @staticmethod
     def displayAllChordsRecipe():
@@ -117,9 +117,6 @@ class Chord():
         from .stream import Stream
         stream = Stream([self])
         stream.show(show_type)
-
-    def type(self):
-        return 'Chord'
 
     def buildArpeggio(self, length=4., unit=1/4, kind='up'):
         # TODO: need more refine. Hard to define a proper Arpeggio
@@ -159,7 +156,7 @@ class Chord():
 
     @staticmethod
     def matchChord(obj, verbose=False):
-        if not isinstance(obj, list) and obj.type() == 'Chord':
+        if not isinstance(obj, list) and isinstance(obj, Chord):
             notes = obj.chord_notes
         else:
             notes = obj
@@ -176,11 +173,12 @@ class Chord():
             return 
 
     def expandChord(self):
-        bass = self.root.changeOctave(-1)
-        notes = [bass] + [bass.applyInterval('P5')] + self.chord_notes + [self.root.changeOctave(1)]
+        notes = [self.root.changeOctave(-1)] + [self.root.changeOctave(-1).applyInterval('P5')] + self.chord_notes + [self.root.changeOctave(1)]
         return Chord(bass, chord_type='user', chord_notes = notes, duration=self.duration)
 
     def closeChord(self):
+        # TODO: not finished
+        names = list(set([note.name for note in self.chord_notes]))
         pass
 
     def __repr__(self):

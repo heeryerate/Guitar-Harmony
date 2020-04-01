@@ -10,18 +10,17 @@ class Note(object):
     __all__ = ['show', 'transpose', 'type', 'm2note', 'getSemiSteps', 'applyInterval', 'changeOctave', 'simplify']
 
     def __init__(self, note='C', duration=1.):
-        if note == 'R':
-            self._rest()
-        else:
-            self.nameWithOctave = self._check(note)
-            self.name = self.nameWithOctave[:-1]
-            self.octave = int(self.nameWithOctave[-1])
-            self.tone = self.nameWithOctave[0]
-            self.accidental = self.nameWithOctave[1:-1]
-
+        self._rest() if note == 'R' else self._note(note)
         if not (isinstance(duration, float) and duration > 0.):
             raise ValueError('duration invalid!')
         self.duration = duration
+
+    def _note(self, note):
+        self.nameWithOctave = self._check(note)
+        self.name = self.nameWithOctave[:-1]
+        self.octave = int(self.nameWithOctave[-1])
+        self.tone = self.nameWithOctave[0]
+        self.accidental = self.nameWithOctave[1:-1]
 
     def _rest(self):
         self.nameWithOctave = 'Rest'
@@ -34,10 +33,7 @@ class Note(object):
         if not isinstance(note, str):   raise ValueError('Note has to be a string')
         if note == '':  note = 'C'
         if not note[-1].isdigit(): note += '4'
-        accidentals = Counter(note[1:-1])
-        bool_acc = (len(accidentals) == 0) or (len(accidentals) == 1 and list(accidentals.keys())[0] in 'b#' and list(accidentals.values())[0] <= 4)
-        # if not bool(re.match("[A-G](#{0,4}|(b|-){0,4})[1-9]", note)): regRex Error?
-        if not ((note[0] in 'CDEFGAB') and bool_acc and (note[-1] in '123456789')):
+        if not bool(re.match("[A-G](#{0,4})[1-9]?$|[A-G](b{0,4})[1-9]?$", note)): 
             raise ValueError('Note invalid! example: Ab, Abb3, G5, B###')
         return note
 
@@ -48,9 +44,6 @@ class Note(object):
         from .stream import Stream
         stream = Stream([self])
         stream.show(kind)
-
-    def type(self):
-        return 'Note'
 
     def transpose(self, steps=0, accidental_type='#'):
         semi_steps = self.getSemiSteps()
