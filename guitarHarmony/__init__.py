@@ -13,13 +13,13 @@ __all__ = [
 			'style',
 			'exercise',
 			'stream',
-			'rythm'
+			'rhythm'
 	]
 from guitarHarmony.note import Note
 from guitarHarmony.interval import Interval
 from guitarHarmony.chord import Chord
 from guitarHarmony.stream import Stream
 from guitarHarmony.scale import Scale
-from guitarHarmony.rythm import Rythm
+# from guitarHarmony.rythm import Rythm
 
 __version__='0.5.9'
