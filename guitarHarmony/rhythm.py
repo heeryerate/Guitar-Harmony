@@ -1,12 +1,16 @@
 from __future__ import absolute_import
 from collections import Counter
-import numpy as np
+import random
+import copy
 import music21 as m2
+from .note import Note
+from .chord import Chord
 
 class Rhythm(object):
     def __init__(self, pattern='', durations=None, bass='B', snare='S', hithat='x', *args, **kwargs):
-        pattern = pattern or 'BxSxSxSBSx'
-        durations = durations or [2, 2, 2, 1, 1, 1, 1, 2, 2, 2]
+        if pattern=='':
+            pattern = 'BxSxSxSBSx'
+            durations = durations or [2, 2, 2, 1, 1, 1, 1, 2, 2, 2]
         self.bass, self.snare, self.hithat = bass, snare, hithat
         self.beatMap = {self.bass:[], self.snare:[], self.hithat:[]}
 
@@ -46,12 +50,27 @@ class Rhythm(object):
         return ds[::-1]
 
     @staticmethod
-    def apply_elements(pattern, durations, **kwargs):
-        stream = m2.stream.Stream([m2.note.Rest()])
+    def apply_elements(pattern, durations, isStart=False, **kwargs):
+        '''
+        kwargs should contains B=[], S=[], x=[], ..., whatever occurs in pattern
+        rule:
+        if B = [chord/note] only contains 1 candidate, then every B will be translate to that,
+        if x = [.,.,.] contains multiple candidates, then every x will be randomly drawn from that,
+        TODO: Optional: if pattern[0]=='B', then translate that B with the lowest pitched chord/note.
+        '''
+        if isStart:
+            stream = m2.stream.Stream([m2.note.Rest()])
+        else:
+            stream = m2.stream.Stream([])
+
         for i, d in zip(pattern, durations):
             el = kwargs[i]
-            if isinstance(el,gt.chord.Chord):
+            if isinstance(el, list):
+                el = copy.deepcopy(random.choice(el))
+
+            if isinstance(el,Chord) or isinstance(el,Note):
                 el = el.m2()
+
             el.quarterLength = d
             stream.append(el)
         return stream   
@@ -95,8 +114,10 @@ class Rhythm(object):
         return new_pattern, new_durations
 
     def substitute_pattern(self, pos_1, pos_2, sub=None, subpat=None, subdur=None):
+        # TODO: Might be some problems if working with subclass, when checking with self.__class__
         if isinstance(sub, self.__class__):
             subpat, subdur = sub.pattern, sub.durations
+            print('replace with pattern %s'%subpat)
 
         new_pattern, new_durations = self._substitute_pattern(self.pattern, self.durations, pos_1, pos_2, subpat, subdur)
         return Rhythm(new_pattern, new_durations)
@@ -123,6 +144,8 @@ class Rhythm(object):
 
         for i in range(nS):
             outS.append(m2.chord.Chord(nl_S[::-1][i:]))
+
+        nl_x.append(m2.note.Rest())
         
         return outB, outS, nl_x
         
@@ -132,11 +155,54 @@ class Rhythm(object):
         self.beatMap[self.snare] = snare
         self.beatMap[self.hithat] = hithat
 
-    
+    def apply_gtChord(self, gtChord, isStart=False, expandChord_times=0, repeat=1):
+        assert isinstance(gtChord, Chord), 'Check input chord type'
+
+        for _ in range(expandChord_times):
+            gtChord = gtChord.expandChord()
+
+        note_list = gtChord.m2().notes
+        self.reset_beatMap(note_list)
+
+
+        stream = self.apply_elements(self.pattern*repeat, self.durations*repeat, isStart=isStart, **self.beatMap)
+        return stream
+
+    def apply_gtChordList(self, gtChord_list, expandChord_times=0):
+        stream = m2.stream.Stream([m2.note.Rest()])
+        for gtChord in gtChord_list:
+            stream_extend = self.apply_gtChord(gtChord, isStart=False, expandChord_times=expandChord_times, repeat=1)
+            for i in stream_extend:
+                stream.append(i)
+
+        return stream
 
 
 
 
+class SimpleRhythm(Rhythm):
+    '''
+    simple notation for rhythm
+    type something like 'B.xSB.S.'
+    to represent durations=[2,1,1,2,2]
+    '''
+    def __init__(self, pattern, normalize=4.0):
+        # pat, dur = [], []
+        # cur, curdur = pattern[0], 1
+        # for i in pattern[1:]:
+        #     if i=='.':
+        #         curdur+=1
+        #     else:
+        #         pat.append(cur)
+        #         dur.append(curdur)
+        #         cur = i
+        #         curdur=1
+        # pat.append(cur)
+        # dur.append(curdur)
+        total = len(pattern)
+        positions = [i for i,p in enumerate(pattern) if p!='.']
+        pattern = pattern.replace('.', '')
+        super(SimpleRhythm, self).__init__(pattern=pattern, positions=positions, total=total, normalize=normalize)
 
 
 
