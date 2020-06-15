@@ -24,7 +24,7 @@ class Interval(object):
         semi_diff= semiB-semiA
 
         if semi_diff < 0:
-            warning(f"Reverse base and target, getInterval({target}, {base}): {Interval.getInterval(target, base)}")
+            # warning(f"Reverse base and target, getInterval({target}, {base}): {Interval.getInterval(target, base)}")
             return 
         octave_diff = target.octave - base.octave
         if octave_diff >= 2:
@@ -80,9 +80,6 @@ class Interval(object):
             print(f"{self} on base {Note(base)}")
         else:
             s.show(show_type)
-
-    def type(self):
-        return 'Interval'
 
     @staticmethod
     def cycleIntervals(lst):
