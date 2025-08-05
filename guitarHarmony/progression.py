@@ -19,20 +19,20 @@ class Progression():
 
         try:
             self.root = root
-        except:
-            raise Exception('Invalid root note supplied.')
+        except Exception as e:
+            raise ValueError(f'Invalid root note supplied: {e}')
 
         if 'major' in progression_type:
             self.notes = list(map(str, Scale(self.root, 'major').notes))
         elif 'minor' in progression_type:
             self.notes = list(map(str, Scale(self.root, 'natural_minor').notes))
         else:
-            raise Exception('Unknow mode! current valid types: major, minor')
+            raise ValueError('Unknown mode! Current valid types: major, minor')
 
         if progression_type in self.progression_recipes.keys():
             self.progression_type = progression_type
         else:
-            raise Exception('Invalid progression type supplied! current valid types: {} '.format(self.progression_recipes.keys()))
+            raise ValueError(f'Invalid progression type supplied! Current valid types: {list(self.progression_recipes.keys())}')
 
         self.build_progression()
 

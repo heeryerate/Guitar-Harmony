@@ -19,8 +19,8 @@ class Style():
 
         try:
             self.root = root
-        except:
-            raise Exception('Invalid root note supplied.')
+        except Exception as e:
+            raise ValueError(f'Invalid root note supplied: {e}')
 
         if 'major' in style_type:
             self.notes = list(map(str, Scale(self.root, 'major').notes))
@@ -28,13 +28,13 @@ class Style():
         elif 'minor' in style_type:
             self.notes = list(map(str, Scale(self.root, 'natural_minor').notes))
         else:
-            raise Exception('Unknow mode! current valid types: major, minor')
+            raise ValueError('Unknown mode! Current valid types: major, minor')
 
 
         if style_type in self.style_recipes.keys():
             self.style_type = style_type
         else:
-            raise Exception('Invalid style type supplied! current valid types: {} '.format(self.style_recipes.keys()))
+            raise ValueError(f'Invalid style type supplied! Current valid types: {list(self.style_recipes.keys())}')
 
         self.build_style()
 

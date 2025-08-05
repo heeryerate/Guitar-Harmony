@@ -9,7 +9,6 @@
 *.aux
 *.fdb_latexmk
 *.toc
-.DS_Store
 *.fls
 
 #######
@@ -27,18 +26,26 @@
 
 .ipynb_checkpoints
 *.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
 MANIFEST
 pub.sh
 setup.cfg
-setup.py
 upload.sh
-LICENSE
 
 #######
 # system
 #######
 
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 #######
 # user specified
@@ -48,7 +55,54 @@ README
 docs/_build/
 dist/
 build/
-guitarHarmony.egg-info
+guitarHarmony.egg-info/
+
+#######
+# React/Node.js
+#######
+
+# dependencies
+guitar-harmony-web/node_modules/
+guitar-harmony-web/.pnp
+guitar-harmony-web/.pnp.js
+
+# testing
+guitar-harmony-web/coverage/
+
+# production
+guitar-harmony-web/build/
+
+# misc
+guitar-harmony-web/.env.local
+guitar-harmony-web/.env.development.local
+guitar-harmony-web/.env.test.local
+guitar-harmony-web/.env.production.local
+
+guitar-harmony-web/npm-debug.log*
+guitar-harmony-web/yarn-debug.log*
+guitar-harmony-web/yarn-error.log*
+
+#######
+# IDE and editor files
+#######
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+#######
+# OS generated files
+#######
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 
 

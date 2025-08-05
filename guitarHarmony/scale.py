@@ -12,16 +12,63 @@ class Scale(object):
         self.durations=durations
 
     def _check(self, root, scale_type, scale_recipe, scale_notes):
-        # TODO: not start
+        """Validate and build scale components."""
+        if scale_type not in CONSTANT.scale_recipes().keys():
+            raise ValueError(f'Invalid scale type {scale_type}! Current valid types: {list(CONSTANT.scale_recipes().keys())}')
+            
+        if scale_type != 'user':
+            scale_recipe_ref = CONSTANT.scale_recipes()[scale_type]
+            scale_notes_ref = self.buildScale(root, scale_recipe_ref)
+            if scale_notes != [] and scale_notes != scale_notes_ref:
+                raise ValueError(f'{scale_type} does not match scale_notes {scale_notes}')
+            if scale_recipe != [] and scale_recipe_ref != scale_recipe:
+                raise ValueError(f'{scale_type} does not match scale_recipe {scale_recipe}')
+            scale_recipe, scale_notes = scale_recipe_ref, scale_notes_ref
+        else:
+            if scale_recipe == [] and scale_notes == []:
+                raise ValueError(f'User scale type not specified!')
+            elif scale_recipe == [] and len(scale_notes) >= 2:
+                scale_recipe = self.buildRecipe(scale_notes)
+            elif scale_notes == [] and len(scale_recipe) >= 2:
+                scale_notes = self.buildScale(root, scale_recipe)
+            elif len(scale_notes) >= 2 and len(scale_recipe) >= 2:
+                scale_notes_ref = self.buildScale(root, scale_recipe)
+                if scale_notes_ref != scale_notes:
+                    raise ValueError(f'{scale_recipe} and {scale_notes} do not match')
+            else:
+                raise ValueError(f'{scale_recipe} and {scale_notes} do not match or cannot construct scale')
+        
+        if root != scale_notes[0]:
+            raise ValueError(f'root {root} and scale_notes {scale_notes} do not match.')
+            
+        scale_recipe = [Interval(interval) if isinstance(interval, str) else interval for interval in scale_recipe]
+        scale_notes = [Note(note) if isinstance(note, str) else note for note in scale_notes]
+        
         return root, scale_type, scale_recipe, scale_notes
 
-    def matchScale(self):
-        # TODO: not start
-        pass
+    def matchScale(self, target_notes):
+        """Match a sequence of notes to a scale."""
+        if isinstance(target_notes[0], str):
+            target_notes = [Note(note) for note in target_notes]
+        
+        for scale_type in CONSTANT.scale_recipes().keys():
+            if scale_type == 'user':
+                continue
+            test_scale = Scale(self.root, scale_type)
+            if all(note in test_scale.scale_notes for note in target_notes):
+                return scale_type
+        return None
 
     def associateChord(self):
-        # TODO: not start
-        pass
+        """Return chords that can be built from this scale."""
+        chords = []
+        for i, note in enumerate(self.scale_notes):
+            # Build triads on each scale degree
+            if i + 2 < len(self.scale_notes):
+                chord_notes = [note, self.scale_notes[i+2], self.scale_notes[(i+4) % len(self.scale_notes)]]
+                chord = Chord(note, 'user', chord_notes=chord_notes)
+                chords.append(chord)
+        return chords
 
     @staticmethod
     def pharseScale(text='C.major'):

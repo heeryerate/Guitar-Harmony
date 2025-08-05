@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from collections import Counter
 import random
 import copy
@@ -169,7 +168,8 @@ class Rhythm(object):
         return stream
 
     def apply_gtChordList(self, gtChord_list, expandChord_times=0):
-        stream = m2.stream.Stream([m2.note.Rest()])
+#         stream = m2.stream.Stream([m2.note.Rest()])
+        stream = m2.stream.Stream()
         for gtChord in gtChord_list:
             stream_extend = self.apply_gtChord(gtChord, isStart=False, expandChord_times=expandChord_times, repeat=1)
             for i in stream_extend:

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import copy
 import music21 as m2
 import collections

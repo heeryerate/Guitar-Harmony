@@ -2,11 +2,12 @@ from .helper import reverseDict, warning, suf, CONSTANT
 import numpy as np
 import music21 as m2
 from .note import Note
+from typing import Optional, Union, List
 
 class Interval(object):
     __all__ = ['getInterval', 'applyInterval', 'show']
 
-    def __init__(self, interval = 'P1'):
+    def __init__(self, interval: str = 'P1') -> None:
         if not interval in CONSTANT.interval_to_semisteps():
             raise ValueError(f'Could not parse the interval {interval}! Check valid list at Interval.displayAllIntervals()')
         self.interval = interval
@@ -15,7 +16,7 @@ class Interval(object):
         self.semi_steps = CONSTANT.interval_to_semisteps()[self.interval]
 
     @staticmethod
-    def getInterval(base='C', target='D'):
+    def getInterval(base: Union[str, 'Note'] = 'C', target: Union[str, 'Note'] = 'D') -> Optional['Interval']:
         if isinstance(base, str): base = Note(base)
         if isinstance(target, str): target = Note(target)
 
@@ -41,12 +42,12 @@ class Interval(object):
             warning(f"double augmented or double diminished ignored.")
             return
 
-    def applyToNote(self, base='C'):
+    def applyToNote(self, base: Union[str, 'Note'] = 'C') -> 'Note':
         if isinstance(base, str): base=Note(base)
         return Interval.applyInterval(base, self)
 
     @staticmethod
-    def applyInterval(base='C', interval='P1'):
+    def applyInterval(base: Union[str, 'Note'] = 'C', interval: Union[str, 'Interval'] = 'P1') -> 'Note':
         if isinstance(base, str): base=Note(base)
         if isinstance(interval, str): interval=Interval(interval)
 
@@ -66,10 +67,10 @@ class Interval(object):
             return Note(target_pitch+mark+str(base.octave+target_octave))
 
     @staticmethod
-    def displayAllIntervals():
+    def displayAllIntervals() -> List[str]:
         return list(CONSTANT.interval_to_semisteps().keys())
 
-    def show(self, show_type = '', base='C'):
+    def show(self, show_type: str = '', base: str = 'C') -> None:
         from .chord import Chord
         from .stream import Stream 
 
@@ -82,19 +83,19 @@ class Interval(object):
             s.show(show_type)
 
     @staticmethod
-    def cycleIntervals(lst):
+    def cycleIntervals(lst: List[str]) -> None:
         # TODO: e.g. transfer [P1, M3, P5] to [M3, P5, P8] to [P1, m3, m6]
         pass
 
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         pitch_suffix = suf(int(self.interval[1:]))
         return f"Interval({CONSTANT.interval_name_mapping()[self.interval_type]},{pitch_suffix})"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.interval
 
-    def __eq__(self, other):
+    def __eq__(self, other: Union[str, 'Interval']) -> bool:
         if isinstance(other, str): other=Interval(other)
         return CONSTANT.interval_to_semisteps()[self.interval] == CONSTANT.interval_to_semisteps()[other.interval]
 

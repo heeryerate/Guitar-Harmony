@@ -4,8 +4,9 @@
 # @Last Modified by:   Xi He
 # @Last Modified time: 2020-04-01 15:11:20
 import collections
+from typing import Dict, List, Any, Union
 
-def reverseDict(dic):
+def reverseDict(dic: Dict[Any, Any]) -> Dict[Any, List[Any]]:
     inv_map = dict()
     for k, v in dic.items():
         inv_map[v] = inv_map.get(v, [])
@@ -17,30 +18,30 @@ class CONSTANT(object):
         pass
 
     @staticmethod
-    def tone_to_semisteps():
+    def tone_to_semisteps() -> Dict[str, int]:
         return {'C' :0, 'C#':1, 'Db':1, 'D' :2, 
                 'D#':3, 'Eb':3, 'E' :4, 'F' :5, 
                 'F#':6, 'G' :7, 'G#':8, 'Ab':8,
                 'A' :9, 'A#':10,'Bb':10,'B' :11}
                 
     @staticmethod
-    def semisteps_to_tone():
+    def semisteps_to_tone() -> Dict[int, List[str]]:
         return reverseDict(CONSTANT.tone_to_semisteps())
 
     @staticmethod
-    def tone_to_steps():
+    def tone_to_steps() -> Dict[str, int]:
         return {'C':1, 'D':2, 'E':3, 'F':4, 'G':5, 'A':6, 'B':7}
 
     @staticmethod
-    def steps_to_tone():
+    def steps_to_tone() -> Dict[int, List[str]]:
         return reverseDict(CONSTANT.tone_to_steps())
 
     @staticmethod
-    def accidental_to_step():
+    def accidental_to_step() -> Dict[str, int]:
         return {'b':-1, '#':1}
 
     @staticmethod
-    def interval_to_semisteps():
+    def interval_to_semisteps() -> Dict[str, int]:
         return {'P1':0,     'A1':1, 
                   'd2':0,     'm2':1,     'M2':2,     'A2':3,
                   'd3':2,     'm3':3,     'M3':4,     'A3':5, 
@@ -57,16 +58,16 @@ class CONSTANT(object):
                   'd14':21,   'm14':22,   'M14':23,   }
 
     @staticmethod
-    def semisteps_to_interval():
+    def semisteps_to_interval() -> Dict[int, List[str]]:
         return reverseDict(CONSTANT.interval_to_semisteps())
 
     @staticmethod
-    def interval_name_mapping():
+    def interval_name_mapping() -> Dict[str, str]:
         return {'P': 'Perfect', 'd': 'Diminished',
                 'm': 'Minor',   'M': 'Major',      'A': 'Augmented'}
 
     @staticmethod
-    def chord_recipes():
+    def chord_recipes() -> Dict[str, List[str]]:
         return {''         : ['P1', 'M3', 'P5'],
                 'm'        : ['P1', 'm3', 'P5'],
                 'dim'      : ['P1', 'm3', 'd5'],
@@ -93,7 +94,7 @@ class CONSTANT(object):
                 }
 
     @staticmethod
-    def scale_recipes():
+    def scale_recipes() -> Dict[str, List[str]]:
         return {'major' :           ['P1', 'M2', 'M3', 'P4', 'P5', 'M6', 'M7', 'P8'],
                 'natural_minor':    ['P1', 'M2', 'm3', 'P4', 'P5', 'm6', 'm7', 'P8'],
                 'harmonic_minor':   ['P1', 'M2', 'm3', 'P4', 'P5', 'm6', 'M7', 'P8'],
@@ -113,35 +114,41 @@ class CONSTANT(object):
                 }
 
     @staticmethod
-    def alter_recipes():
+    def alter_recipes() -> Dict[str, List[str]]:
         return {'power5'   : ['P1', 'P5'],
                 'add2'     : ['M9'],
                      }
 
     @staticmethod
-    def arpeggio_note_units():
+    def arpeggio_note_units() -> List[float]:
         return [1/8, 1/4, 1/3, 1/6]
 
     @staticmethod
-    def argeggio_kinds():
+    def argeggio_kinds() -> List[str]:
         return ['down', 'Down', 'up', 'Up', 'valley', 'hill', 'Valley', 'Hill']
 
 
-def warning(message, style='WARNING'):
-    CRED = '\033[91m'
-    CEND = '\033[0m'
-    print(CRED + style + ':' + CEND, message)
+from .logger import get_logger
 
-def suf(n):
+logger = get_logger()
+
+def warning(message: str, style: str = 'WARNING') -> None:
+    """Log a warning message."""
+    logger.warning(f"{style}: {message}")
+
+def suf(n: int) -> str:
+    """Get ordinal suffix for a number."""
     return "%d%s"%(n,{1:"st",2:"nd",3:"rd"}.get(n if n<20 else n%10,"th"))
 
-def flatten(x):
-    if isinstance(x, collections.Iterable):
+def flatten(x: Any) -> List[Any]:
+    """Flatten a nested iterable structure."""
+    if isinstance(x, collections.abc.Iterable):
         return [a for i in x for a in flatten(i)]
     else:
         return [x]
 
-def cyclelist(x):
+def cyclelist(x: List[Any]) -> List[List[Any]]:
+    """Generate all cyclic permutations of a list."""
     if not isinstance(x, list):
         raise ValueError(f"{x} invalid!")
     if len(x) <= 1:
